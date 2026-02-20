@@ -59,8 +59,8 @@ class UiController extends Controller {
                 bridge.current = await bridge.getCurrent();
                 result.updates[bridge.name] = {
                     ...bridge.stat,
-                    last: bridge.last,
-                    current: bridge.current,
+                    last: bridge.last ? bridge.last.toString() : null,
+                    current: bridge.current ? bridge.current.toString() : null,
                 }
             }
             res.json(result);

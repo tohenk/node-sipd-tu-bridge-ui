@@ -34,10 +34,11 @@ $.bridge = {
                         for (const [k, v] of Object.entries(json.updates[bridge])) {
                             $(\`[data-bridge="\${bridge}"] [data-key="\${k}"]\`).each(function() {
                                 const el = $(this);
+                                const value = v && v.value !== undefined ? v.value : v;
                                 if (el.is('input')) {
-                                    el.val(v);
+                                    el.val(value);
                                 } else {
-                                    el.html(v ? v : '&ndash;');
+                                    el.html(value ? value : '&ndash;');
                                 }
                             });
                         }

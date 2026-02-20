@@ -40,9 +40,16 @@ $.uiCon = {
                 console.log('Socket disconnected');
             })
             .on('activity', function(data) {
-                if (Array.isArray(data)) {
-                    for (const msg of data) {
-                        $.activity.add(msg);
+                if (data && data.time && Array.isArray(data.logs)) {
+                    for (const message of data.logs) {
+                        $.activity.add({time: data.time, message});
+                    }
+                }
+            })
+            .on('log', function(data) {
+                if (data && data.bridge && data.time && Array.isArray(data.logs)) {
+                    for (const message of data.logs) {
+                        $.bridge.addLog(data.bridge, {time: data.time, message});
                     }
                 }
             })

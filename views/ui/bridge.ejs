@@ -15,7 +15,7 @@
         <%_ Object.keys(bridge.stat).forEach(stat => { -%>
         <div class="fields">
           <div class="six wide field"><label><%= _(bridge.stat[stat].label) %></label></div>
-          <div class="ten wide field" data-key="<%= stat %>"><input type="text" value="<%- bridge.stat[stat].value %>" readonly></div>
+          <div class="ten wide field"><input type="text" value="<%- bridge.stat[stat].value %>" data-key="<%= stat %>" readonly></div>
         </div>
         <%_ }) -%>
         <div class="field">

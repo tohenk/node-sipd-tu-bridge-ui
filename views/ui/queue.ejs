@@ -34,12 +34,13 @@ $.queue.toRow = function(data) {
     <td>\${this.toData(data.type)}</td>
     <td>\${this.toData(data.name)}</td>
     <td>\${this.toStatus(data.status)}</td>
-    <td>\${this.toData(data.result)}</td>
+    <td>\${this.toData(data.result, true)}</td>
     <td>\${this.toData(data.time)}</td>
 </tr>\`);
 }
-$.queue.toData = function(data) {
-    return data !== undefined ? data.toString() : '';
+$.queue.toData = function(data, json = false) {
+    return data !== undefined ?
+        (json ? JSON.stringify(data) : data.toString()) : '';
 }
 $.queue.toStatus = function(data) {
     const icon = {
