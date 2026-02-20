@@ -1,0 +1,64 @@
+<div class="ui top attached stackable tabular menu">
+  <a class="item" data-tab="status"><%= _('Status') %></a>
+  <a class="item" data-tab="activity"><%= _('Activity') %></a>
+  <a class="item" data-tab="queue"><%= _('Queue') %></a>
+  <%_ if (api.bridges.length) { -%>
+  <a class="item" data-tab="bridge"><%= _('Bridge') %> <span class="ui tiny label"><%= api.bridges.length %></span></a>
+  <%_ } -%>
+</div>
+<div class="ui bottom attached tab segment" data-tab="status">
+<%- include('status') -%>
+</div>
+<div class="ui bottom attached tab segment" data-tab="activity">
+<%- include('activity') -%>
+</div>
+<div class="ui bottom attached tab segment" data-tab="queue">
+<%- include('queue') -%>
+</div>
+<%- include('bridgehandler') -%>
+<%_ if (api.bridges.length) { -%>
+<div class="ui bottom attached tab segment" data-tab="bridge">
+<%- include('bridge') -%>
+</div>
+<%_ } -%>
+<%_ script.create('JQuery')
+  .useDependencies(['SocketIO'])
+  .addMiddle(`
+$.uiCon = {
+    connected: false,
+    data: ${s(socket, 1)},
+    init() {
+        const self = this;
+        self.socket = io.connect(self.data.url, self.data.options);
+        self.socket
+            .on('connect', function() {
+                self.connected = true;
+                console.log('Socket connected');
+            })
+            .on('disconnect', function() {
+                self.connected = false;
+                console.log('Socket disconnected');
+            })
+            .on('activity', function(data) {
+                if (Array.isArray(data)) {
+                    for (const msg of data) {
+                        $.activity.add(msg);
+                    }
+                }
+            })
+            .on('queue', function() {
+                $.queue.reload();
+                $.bridge.update();
+            });
+    }
+}
+`)
+  .addLast(`
+$('.menu .item').tab({
+    autoTabActivation: window.location.hash ? window.location.hash.substr(1) : true,
+    onLoad(path, params, history) {
+        window.location.hash = path;
+    }
+});
+$.uiCon.init();
+`) -%>

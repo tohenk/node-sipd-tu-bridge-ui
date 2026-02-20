@@ -1,0 +1,58 @@
+<%_ script.create('JQuery')
+  .addMiddle(`
+$.bridge = {
+    bridges: {},
+    getLog(name) {
+        const self = this;
+        $.get('${route('Ui', {name: 'log', bridge: 'BRIDGE'})}'.replace(/BRIDGE/, name))
+            .done(function(json) {
+                if (json.logs) {
+                    const log = $(self.bridges[name].log);
+                    log.text(json.logs);
+                    self.bridges[name].time = json.time;
+                }
+            });
+    },
+    addLog(name, data) {
+        const self = this;
+        if (data.time >= self.bridges[name].time) {
+            const log = $(self.bridges[name].log);
+            const message = data.message + '\\r\\n';
+            if (log.text().substr(-message.length) !== message) {
+                log.append(message);
+                log.scrollTop(log[0].scrollHeight - log.height());
+                self.bridges[name].time = data.time;
+            }
+        }
+    },
+    update() {
+        const self = this;
+        $.get('${route('Ui', {name: 'updates'})}')
+            .done(function(json) {
+                if (json.updates) {
+                    for (const bridge of Object.keys(json.updates)) {
+                        for (const [k, v] of Object.entries(json.updates[bridge])) {
+                            $(\`[data-bridge="\${bridge}"] [data-key="\${k}"]\`).each(function() {
+                                const el = $(this);
+                                if (el.is('input')) {
+                                    el.val(v);
+                                } else {
+                                    el.html(v ? v : '&ndash;');
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+    },
+    init(bridges) {
+        const self = this;
+        for (const bridge of bridges) {
+            self.bridges[bridge] = {
+                log: $(\`.log.\${bridge}\`)
+            }
+            self.getLog(bridge);
+        }
+    }
+}
+`) -%>

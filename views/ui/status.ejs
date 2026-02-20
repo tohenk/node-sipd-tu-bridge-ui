@@ -1,0 +1,84 @@
+<div class="ui centered stackable grid">
+  <div class="row"></div>
+  <div class="row">
+    <div class="twelve wide column">
+      <%- include('info') -%>
+    </div>
+  </div>
+  <%_ if (api.bridges.length) { -%>
+  <div class="row">
+    <div class="twelve wide column">
+      <div class="ui horizontal divider">
+        <%- _('Bridges') %>
+      </div>
+    </div>
+  </div>
+  <%_ api.bridges.forEach(bridge => { -%>
+  <%_ stats = Object.keys(bridge.stat) -%>
+  <div class="twelve wide column">
+    <div class="ui fluid card">
+      <div class="content">
+        <div class="ui right floated tiny label"><%= bridge.year %></div>
+        <div class="item header"><i class="ui laptop code icon"></i><%= bridge.name.toUpperCase() %></div>
+      </div>
+      <div class="extra content" data-bridge="<%= bridge.name %>">
+        <div class="ui divided items">
+          <!-- stat -->
+          <div class="center aligned item">
+            <div class="ui fluid tiny statistic">
+              <div class="value">
+                <div class="ui breadcrumb">
+                  <%_ stats.forEach((stat, i) => { -%>
+                  <div class="section" data-key="<%= stat %>"><%- bridge.stat[stat].value ? bridge.stat[stat].value : '&ndash;' %></div>
+                  <%_ if (i < stats.length - 1) { -%>
+                  <div class="divider"> / </div>
+                  <%_ } -%>
+                  <%_ }) -%>
+                </div>
+              </div>
+              <div class="label">
+                <div class="ui breadcrumb">
+                  <%_ stats.forEach((stat, i) => { -%>
+                  <div class="section"><%- _(bridge.stat[stat].label) %></div>
+                  <%_ if (i < stats.length - 1) { -%>
+                  <div class="divider"> / </div>
+                  <%_ } -%>
+                  <%_ }) -%>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- stat end -->
+          <!-- processing -->
+          <div class="center aligned item">
+            <div class="ui fluid tiny statistic">
+              <div class="value" data-key="current"><%- bridge.current ?? '&ndash;' %></div>
+              <div class="label"><%- _('Queue in progress') %></div>
+            </div>
+          </div>
+          <!-- processing end -->
+          <!-- last -->
+          <div class="center aligned item">
+            <div class="ui fluid tiny statistic">
+              <div class="value" data-key="last"><%- bridge.last ?? '&ndash;' %></div>
+              <div class="label"><%- _('Last queue') %></div>
+            </div>
+          </div>
+          <!-- last end -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <%_ }) -%>
+  <%_ } else { -%>
+  <div class="ui placeholder segment" style="min-height: 75vh;">
+    <div class="ui icon header">
+      <i class="laptop code icon"></i>
+      <div class="ui big hidden divider"></div>
+      <%= _('Currently, no connected bridge available.') %><br/>
+      <%= _('Once a connection established, it will appear here.') %>
+    </div>
+  </div>
+  <%_ } -%>
+  <div class="row"></div>
+</div>

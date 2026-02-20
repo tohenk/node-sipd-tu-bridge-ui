@@ -1,0 +1,66 @@
+<h3 class="ui header x-title"></h3>
+<table class="ui selectable celled table">
+  <thead>
+    <tr>
+      <th><%= _('#') %></th>
+      <th><%= _('Id') %></th>
+      <th><%= _('Type') %></th>
+      <th><%= _('Name') %></th>
+      <th><%= _('Status') %></th>
+      <th><%= _('Result') %></th>
+      <th><%= _('Time') %></th>
+    </tr>
+  </thead>
+</table>
+<%_ script.create('JQuery')
+  .useDependencies('SemanticUI/Loader')
+  .addMiddle(`
+$.queue = $.loader($('div[data-tab="queue"] table'), {
+    url: '${route('Ui', {name: 'queue', page: 'PAGE'})}',
+    formatRow(item) {
+        return this.toRow(item);
+    },
+    loaded() {
+        const self = this;
+        if (self.loading) {
+            self.loading = false;
+        }
+    }
+});
+$.queue.toRow = function(data) {
+    return $(
+\`<tr><td>\${data.nr}</td>
+    <td>\${this.toData(data.id)}</td>
+    <td>\${this.toData(data.type)}</td>
+    <td>\${this.toData(data.name)}</td>
+    <td>\${this.toStatus(data.status)}</td>
+    <td>\${this.toData(data.result)}</td>
+    <td>\${this.toData(data.time)}</td>
+</tr>\`);
+}
+$.queue.toData = function(data) {
+    return data !== undefined ? data.toString() : '';
+}
+$.queue.toStatus = function(data) {
+    const icon = {
+        new: 'pause circle outline',
+        processing: 'spinner',
+        done: 'green check',
+        error: 'red times',
+        timeout: 'clock outline',
+        skipped: 'exclamation',
+    }[data];
+    return icon ? \`<div data-tooltip="\${data}" data-position="right center"><i class="\${icon} icon"></i></div>\` :
+        this.toData(data);
+}
+$.queue.reload = function() {
+    const self = this;
+    if (!self.loading) {
+        self.loading = true;
+        self.load();
+    }
+}
+`)
+  .addLast(`
+$.queue.load();
+`) -%>

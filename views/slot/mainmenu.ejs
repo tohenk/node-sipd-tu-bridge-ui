@@ -1,0 +1,69 @@
+<%_ menus = {
+    branding: {
+        type: 'brand',
+        title: apptitle,
+        logo: path('/images/logo.png'),
+        url: path('/')
+    },
+    tasks: {
+        title: _('Tasks'),
+        class: 'right floated',
+        items: {
+            about: {
+                title: _('About')
+            }
+        }
+    }
+} -%>
+<%_ if (user.authenticated) {
+    Object.assign(menus.tasks.items, {
+        divider1: {
+            type: 'divider'
+        },
+        logout: {
+            title: _('Logout'),
+            url: route('Security', {name: 'logout'})
+        }
+    });
+} -%>
+<%- menu(menus, {mainmenu: true, indentation: 2}) %>
+<%_ script.create('JQuery')
+  .useDependencies(['JQuery/Util', 'SemanticUI/Notification', 'SemanticUI/Dialog/Message'])
+  .addMiddle(`
+$.tasks = {
+    about() {
+        const self = this;
+        const f = function() {
+            const msg = $.util.template(
+                '<p>%TITLE% version %VERSION%<br/>\\n' +
+                '&copy; %AUTHOR%<br/>\\n' +
+                'Licensed under %LICENSE%</p>', {
+                    TITLE: self.aboutInfo.title,
+                    VERSION: self.aboutInfo.version,
+                    AUTHOR: $('<div>').text(self.aboutInfo.author).html(),
+                    LICENSE: self.aboutInfo.license
+                }
+            );
+            $.ntdlg.message('task-about', '${_('About')}', msg, $.ntdlg.ICON_INFO);
+        }
+        if (!self.aboutInfo) {
+            $.get('${route('Ui', {name: 'about'})}')
+                .done(function(json) {
+                    self.aboutInfo = json;
+                    f();
+                });
+        } else {
+            f();
+        }
+    },
+    init() {
+        const self = this;
+        $('.menu-about').on('click', function(e) {
+            e.preventDefault();
+            self.about();
+        });
+    }
+}
+`).addLast(`
+$.tasks.init();
+`) -%>

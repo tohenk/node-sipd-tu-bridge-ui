@@ -1,0 +1,49 @@
+{
+  "name": "@ntlab/sipd-tu-bridge-ui",
+  "version": "1.0.0",
+  "description": "SIPD Penatausahaan Bridge Web Interface",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tohenk/node-sipd-tu-bridge-ui.git"
+  },
+  "keywords": [
+    "sipd",
+    "penatausahaan",
+    "kemendagri",
+    "spp",
+    "spp-ls",
+    "lpj",
+    "npd",
+    "tbp",
+    "otomasi",
+    "selenium",
+    "socket.io",
+    "web-interface"
+  ],
+  "author": "Toha <tohenk@yahoo.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tohenk/node-sipd-tu-bridge-ui/issues"
+  },
+  "homepage": "https://github.com/tohenk/node-sipd-tu-bridge-ui#readme",
+  "dependencies": {
+    "@ntlab/express-controller": "^1.2.0",
+    "@ntlab/express-middleware": "^2.4.0",
+    "@ntlab/ntjs": "^3.0.0",
+    "@ntlab/ntjs-assets": "^2.139.0",
+    "@ntlab/ntjs-repo": "^3.0.1",
+    "@ntlab/ntlib": "^2.9.0",
+    "ejs": "^3.1.10",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "http-errors": "^2.0.1",
+    "moment": "^2.30.1",
+    "morgan": "^1.10.1",
+    "session-file-store": "^1.5.0",
+    "terser": "^5.46.0"
+  }
+}

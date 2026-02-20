@@ -1,0 +1,16 @@
+body.with-menu {
+  padding-top: 5em;
+}
+
+body:not([class]) main, #login-container {
+  height: 100%;
+}
+
+#login-container > div {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
+img.logo {
+  margin-right: 1em !important;
+}

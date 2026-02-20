@@ -1,0 +1,42 @@
+<%_ bridges = api.bridges -%>
+<%_ names = bridges.map(b => b.name) -%>
+<div class="ui stackable grid">
+  <div class="row">
+    <div class="four wide column">
+      <div class="ui fluid vertical pointing menu">
+        <%_ bridges.forEach(bridge => { -%>
+        <a href="#" class="item" data-bridge="<%= bridge.name %>"><i class="laptop code icon"></i> <%= bridge.name.toUpperCase() %></a>
+        <%_ }) -%>
+      </div>
+    </div>
+    <div class="twelve wide column">
+      <%_ bridges.forEach(bridge => { -%>
+      <div class="ui form bridge <%= bridge.name %>" style="display: none;">
+        <%_ Object.keys(bridge.stat).forEach(stat => { -%>
+        <div class="fields">
+          <div class="six wide field"><label><%= _(bridge.stat[stat].label) %></label></div>
+          <div class="ten wide field" data-key="<%= stat %>"><input type="text" value="<%- bridge.stat[stat].value %>" readonly></div>
+        </div>
+        <%_ }) -%>
+        <div class="field">
+          <label><%= _('Logs') %></label>
+          <textarea class="log <%= bridge.name %>" rows="20" readonly></textarea>
+        </div>
+      </div>
+      <%_ }) -%>
+    </div>
+  </div>
+</div>
+<%_ items = JSON.stringify(names, null, 4) -%>
+<%_ script.create('JQuery')
+  .add(`
+$.bridge.init(${items});
+$('a[data-bridge]').on('click', function(e) {
+    e.preventDefault();
+    const a = $(this);
+    a.siblings('a').removeClass('active');
+    a.addClass('active');
+    $(\`.ui.form.bridge\`).hide();
+    $(\`.ui.form.bridge.\${a.data('bridge')}\`).show();
+}).filter(':first').click();
+`) -%>
