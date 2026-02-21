@@ -30,17 +30,24 @@ $.queue = $.loader($('div[data-tab="queue"] table'), {
 $.queue.toRow = function(data) {
     return $(
 \`<tr><td>\${data.nr}</td>
-    <td>\${this.toData(data.id)}</td>
-    <td>\${this.toData(data.type)}</td>
-    <td>\${this.toData(data.name)}</td>
+    <td>\${this.toStr(data.id)}</td>
+    <td>\${this.toStr(data.type)}</td>
+    <td>\${this.toStr(data.name)}</td>
     <td>\${this.toStatus(data.status)}</td>
-    <td>\${this.toData(data.result, true)}</td>
-    <td>\${this.toData(data.time)}</td>
+    <td>\${this.toStr(data.result)}</td>
+    <td>\${this.toStr(data.time)}</td>
 </tr>\`);
 }
-$.queue.toData = function(data, json = false) {
-    return data !== undefined ?
-        (json ? JSON.stringify(data) : data.toString()) : '';
+$.queue.toStr = function(o) {
+    if (
+        Array.isArray(o) ||
+        typeof o === 'object' && o.constructor.name === 'Object'
+    ) {
+        return JSON.stringify(o);
+    } else if (o !== undefined && o !== null) {
+        return o.toString();
+    }
+    return '';
 }
 $.queue.toStatus = function(data) {
     const icon = {
@@ -52,7 +59,7 @@ $.queue.toStatus = function(data) {
         skipped: 'exclamation',
     }[data];
     return icon ? \`<div data-tooltip="\${data}" data-position="right center"><i class="\${icon} icon"></i></div>\` :
-        this.toData(data);
+        this.toStr(data);
 }
 $.queue.reload = function() {
     const self = this;
