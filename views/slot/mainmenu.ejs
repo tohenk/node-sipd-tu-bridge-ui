@@ -35,7 +35,8 @@ $.tasks = {
         const self = this;
         const f = function() {
             const msg = $.util.template(
-                '<p>%TITLE% version %VERSION%<br/>\\n' +
+                '<p>%TITLE%<br/>\\n' +
+                'Version %VERSION%<br/>\\n' +
                 '&copy; %AUTHOR%<br/>\\n' +
                 'Licensed under %LICENSE%</p>', {
                     TITLE: self.aboutInfo.title,
