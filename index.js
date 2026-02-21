@@ -35,8 +35,10 @@
  * @property {object} config Configuration
  * @property {SipdBridge[]} bridges Bridges
  * @property {AuthenticateFunction} authenticate Perform usename and password authentication
- * @property {GetQueuesFunction} getQueues Get queues
+ * @property {PagedObjectsPromiseFunction} getQueues Get queues
  * @property {StringPromiseFunction} getActivity Get activity logs
+ * @property {ObjectPromiseFunction} getCount Get activity count
+ * @property {PagedObjectsPromiseFunction} getErrors Get captured errors
  */
 
 /**
@@ -71,9 +73,9 @@
  */
 
 /**
- * Get queues.
+ * A function which returns paged objects Promise.
  *
- * @callback GetQueuesFunction
+ * @callback PagedObjectsPromiseFunction
  * @param {number} page Page number
  * @param {number} size Page size
  * @returns {Promise<object[]>}

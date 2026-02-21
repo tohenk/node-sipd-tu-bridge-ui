@@ -33,15 +33,17 @@ class UiController extends Controller {
         this.addRoute('index', 'get', '/', async (req, res, next) => {
             /** @type {import('..').SipdApi} */
             const api = req.app.api;
+            api.counter = await api.getCount();
             for (const bridge of api.bridges) {
                 bridge.stat = await bridge.getStats();
                 bridge.last = await bridge.getLast();
                 bridge.current = await bridge.getCurrent();
             }
-            const socketOptions = {reconnection: true};
+            const socketOptions = {};
             if (req.app.get('root') !== '/') {
                 socketOptions.path = req.getPath('/socket.io/');
             }
+            socketOptions.reconnection = true;
             res.render('ui/index', {
                 socket: {
                     url: `${req.getUri({noproto: true})}/ui`,
@@ -53,6 +55,7 @@ class UiController extends Controller {
             const result = {updates: {}};
             /** @type {import('..').SipdApi} */
             const api = req.app.api;
+            result.counter = await api.getCount();
             for (const bridge of api.bridges) {
                 bridge.stat = await bridge.getStats();
                 bridge.last = await bridge.getLast();
@@ -97,6 +100,13 @@ class UiController extends Controller {
                     }
                 }
             }
+            res.json(result);
+        });
+        this.addRoute('error', 'get', '/error', async (req, res, next) => {
+            /** @type {import('..').SipdApi} */
+            const api = req.app.api;
+            const result = await api.getErrors(req.params.page || req.query.page, req.params.size || req.query.size);
+            result.pages = req.app.locals.pager(result.count, result.size, result.page);
             res.json(result);
         });
         this.addRoute('about', 'get', '/about', (req, res, next) => {

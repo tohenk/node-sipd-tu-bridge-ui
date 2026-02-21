@@ -42,7 +42,7 @@ $.queue.toRow = function(data) {
     <td>\${$.toStr(data.type)}</td>
     <td>\${$.toStr(data.name)}</td>
     <td>\${this.toStatus(data.status)}</td>
-    <td>\${$.hidePayload($.toStr(data.result))}</td>
+    <td><div class="ui scrolling container queue-result">\${$.hidePayload($.toStr(data.result))}</div></td>
     <td>\${$.toStr(data.time)}</td>
 </tr>\`);
 }

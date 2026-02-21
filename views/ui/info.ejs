@@ -4,13 +4,25 @@
   </div>
   <div class="extra content">
       <div class="ui form">
-        <div class="fields">
-          <div class="six wide field"><%= _('Protocol:') %></div>
-          <div class="ten wide field"><%= api.proto %></div>
-        </div>
-        <div class="fields">
-          <div class="six wide field"><%= _('Mode:') %></div>
-          <div class="ten wide field"><%= api.mode %></div>
+        <div class="ui two column stackable grid">
+          <div class="column">
+            <div class="fields">
+              <div class="eight wide field"><label><%= _('Protocol:') %></label></div>
+              <div class="eight wide field"><label><%= api.proto %></label></div>
+            </div>
+            <div class="fields">
+              <div class="eight wide field"><label><%= _('Mode:') %></label></div>
+              <div class="eight wide field"><label><%= api.mode %></label></div>
+            </div>
+          </div>
+          <div class="column">
+            <%_ Object.keys(api.counter).forEach(counter => { -%>
+            <div class="fields">
+              <div class="eight wide field"><label><%= _(api.counter[counter].label) %></label></div>
+              <div class="eight wide field"><label data-counter="<%= counter %>"><%= _(api.counter[counter].value) %></label></div>
+            </div>
+            <%_ }) -%>
+          </div>
         </div>
       </div>
   </div>

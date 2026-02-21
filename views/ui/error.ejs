@@ -1,0 +1,78 @@
+<h3 class="ui header x-title"></h3>
+<table class="ui selectable celled table">
+  <thead>
+    <tr>
+      <th><%= _('#') %></th>
+      <th><%= _('Screen') %></th>
+      <th><%= _('Error') %></th>
+      <th><%= _('Data') %></th>
+    </tr>
+  </thead>
+</table>
+<%_ script.create('JQuery')
+  .useDependencies(['SemanticUI/Loader', 'SemanticUI/Dialog'])
+  .add(`
+$.error = $.loader($('div[data-tab="error"] table'), {
+    url: '${route('Ui', {name: 'error', page: 'PAGE'})}',
+    formatRow(item) {
+        return this.toRow(item);
+    },
+    loaded(json) {
+        const self = this;
+        if (json.count !== undefined) {
+            const counter = $('[data-tab="error"] .label');
+            if (json.count) {
+                counter.text(json.count).removeClass('hidden');
+            } else {
+                counter.addClass('hidden');
+            }
+        }
+        $('a.err-img-view').on('click', function(e) {
+            e.preventDefault();
+            const a = $(this);
+            const dlg = $.ntdlg.create(
+                'err-img-view-dlg',
+                a.data('tooltip'),
+                \`<img class="ui fluid image" src="\${a.find('img').attr('src')}" style="max-height: 70vh;">\`, {
+                    size: 'fullscreen',
+                    buttons: {
+                        okay: {
+                            type: 'green approve',
+                            caption: '<i class="check icon"></i>${_('Ok')}',
+                        }
+                    }
+                }
+            );
+            $.ntdlg.show(dlg);
+        });
+        if (self.loading) {
+            self.loading = false;
+        }
+    }
+});
+$.error.toRow = function(data) {
+    return $(
+\`<tr><td>\${data.nr}</td>
+    <td>\${this.toImg($.toStr(data.image), data.filename)}</td>
+    <td>\${$.toStr(data.error)}</td>
+    <td><div class="ui scrolling container err-data">\${$.hidePayload($.toStr(data.data))}</div></td>
+</tr>\`);
+}
+$.error.toImg = function(data, alt) {
+    if (data) {
+        return \`<a href="#" class="err-img-view" data-tooltip="\${alt}" data-position="right center">
+<img class="ui medium rounded bordered image" src="\${data}" alt="\${alt}">
+</a>\`;
+    }
+}
+$.error.reload = function() {
+    const self = this;
+    if (!self.loading) {
+        self.loading = true;
+        self.load();
+    }
+}
+`)
+  .addInitializer(`
+$.error.load();
+`) -%>
