@@ -1,5 +1,5 @@
 <%_ script.create('JQuery')
-  .addMiddle(`
+  .add(`
 $.bridge = {
     bridges: {},
     getLog(name) {
@@ -24,27 +24,6 @@ $.bridge = {
                 self.bridges[name].time = data.time;
             }
         }
-    },
-    update() {
-        const self = this;
-        $.get('${route('Ui', {name: 'updates'})}')
-            .done(function(json) {
-                if (json.updates) {
-                    for (const bridge of Object.keys(json.updates)) {
-                        for (const [k, v] of Object.entries(json.updates[bridge])) {
-                            $(\`[data-bridge="\${bridge}"] [data-key="\${k}"]\`).each(function() {
-                                const el = $(this);
-                                const value = v && v.value !== undefined ? v.value : v;
-                                if (el.is('input')) {
-                                    el.val(value);
-                                } else {
-                                    el.html(value ? value : '&ndash;');
-                                }
-                            });
-                        }
-                    }
-                }
-            });
     },
     init(bridges) {
         const self = this;

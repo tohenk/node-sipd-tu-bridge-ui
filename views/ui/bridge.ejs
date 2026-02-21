@@ -29,7 +29,7 @@
 </div>
 <%_ items = JSON.stringify(names, null, 4) -%>
 <%_ script.create('JQuery')
-  .add(`
+  .addInitializer(`
 $.bridge.init(${items});
 $('a[data-bridge]').on('click', function(e) {
     e.preventDefault();

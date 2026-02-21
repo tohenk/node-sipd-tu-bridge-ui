@@ -1,6 +1,6 @@
 {
   "name": "@ntlab/sipd-tu-bridge-ui",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "SIPD Penatausahaan Bridge Web Interface",
   "main": "index.js",
   "scripts": {
@@ -33,9 +33,9 @@
   "dependencies": {
     "@ntlab/express-controller": "^1.2.0",
     "@ntlab/express-middleware": "^2.4.0",
-    "@ntlab/ntjs": "^3.0.0",
+    "@ntlab/ntjs": "^3.1.0",
     "@ntlab/ntjs-assets": "^2.139.0",
-    "@ntlab/ntjs-repo": "^3.0.1",
+    "@ntlab/ntjs-repo": "^3.1.0",
     "@ntlab/ntlib": "^2.9.0",
     "ejs": "^3.1.10",
     "express": "^5.2.1",

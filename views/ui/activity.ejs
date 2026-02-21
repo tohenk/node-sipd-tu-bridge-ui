@@ -2,7 +2,7 @@
   <textarea class="activity" rows="30" readonly></textarea>
 </div>
 <%_ script.create('JQuery')
-  .addMiddle(`
+  .add(`
 $.activity = {
     el: $('textarea.activity'),
     url: '${route('Ui', {name: 'activity'})}',
@@ -29,6 +29,6 @@ $.activity = {
     }
 }
 `)
-  .addLast(`
+  .addInitializer(`
 $.activity.load();
 `) -%>

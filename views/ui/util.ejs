@@ -1,0 +1,43 @@
+<%_ script.create('JQuery')
+  .add(`
+$.uiRefresh = function() {
+    $.get('${route('Ui', {name: 'updates'})}')
+        .done(function(json) {
+            if (json.updates) {
+                for (const bridge of Object.keys(json.updates)) {
+                    for (const [k, v] of Object.entries(json.updates[bridge])) {
+                        $(\`[data-bridge="\${bridge}"] [data-key="\${k}"]\`).each(function() {
+                            const el = $(this);
+                            const value = v && v.value !== undefined ? v.value : v;
+                            if (el.is('input')) {
+                                el.val(value);
+                            } else {
+                                el.html(value ? value : '&ndash;');
+                            }
+                        });
+                    }
+                }
+            }
+        });
+}
+$.hidePayload = function(message) {
+    if (message) {
+        message = message.replace(
+            /[A-Za-z0-9\\+\\/\\=\\@\\,]{40,}/g,
+            s => \`<i class="comment dots outline icon" data-tooltip="\${s}" data-position="right center"></i>\`
+        )
+    }
+    return message;
+}
+$.toStr = function(o) {
+    if (
+        Array.isArray(o) ||
+        typeof o === 'object' && o.constructor.name === 'Object'
+    ) {
+        return JSON.stringify(o);
+    } else if (o !== undefined && o !== null) {
+        return o.toString();
+    }
+    return '';
+}
+`) -%>

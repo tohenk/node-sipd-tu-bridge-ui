@@ -1,7 +1,7 @@
 <div class="ui top attached stackable tabular menu">
   <a class="item" data-tab="status"><%= _('Status') %></a>
   <a class="item" data-tab="activity"><%= _('Activity') %></a>
-  <a class="item" data-tab="queue"><%= _('Queue') %></a>
+  <a class="item" data-tab="queue"><%= _('Queue') %> <span class="ui hidden tiny label"></span></a>
   <%_ if (api.bridges.length) { -%>
   <a class="item" data-tab="bridge"><%= _('Bridge') %> <span class="ui tiny label"><%= api.bridges.length %></span></a>
   <%_ } -%>
@@ -21,9 +21,10 @@
 <%- include('bridge') -%>
 </div>
 <%_ } -%>
+<%- include('util') -%>
 <%_ script.create('JQuery')
   .useDependencies(['SocketIO'])
-  .addMiddle(`
+  .add(`
 $.uiCon = {
     connected: false,
     data: ${s(socket, 1)},
@@ -55,12 +56,12 @@ $.uiCon = {
             })
             .on('queue', function() {
                 $.queue.reload();
-                $.bridge.update();
+                $.uiRefresh();
             });
     }
 }
 `)
-  .addLast(`
+  .addInitializer(`
 $('.menu .item').tab({
     autoTabActivation: window.location.hash ? window.location.hash.substr(1) : true,
     onLoad(path, params, history) {
