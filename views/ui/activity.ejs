@@ -18,7 +18,7 @@ $.activity = {
     },
     add(data) {
         const self = this;
-        if (data.time >= self.time) {
+        if (self.time === undefined || data.time >= self.time) {
             const message = data.message + '\\r\\n';
             if (self.el.text().substr(-message.length) !== message) {
                 self.el.append(message);

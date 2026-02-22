@@ -15,7 +15,10 @@ $.bridge = {
     },
     addLog(name, data) {
         const self = this;
-        if (data.time >= self.bridges[name].time) {
+        if (
+            self.bridges[name] &&
+            (self.bridges[name].time === undefined || data.time >= self.bridges[name].time)
+        ) {
             const log = $(self.bridges[name].log);
             const message = data.message + '\\r\\n';
             if (log.text().substr(-message.length) !== message) {
