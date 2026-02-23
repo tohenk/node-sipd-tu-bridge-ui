@@ -42,7 +42,7 @@ $.hidePayload = function(message) {
     if (message) {
         message = message.replace(
             /[A-Za-z0-9\\+\\/\\=\\@\\,]{40,}/g,
-            s => \`<i class="comment dots outline icon" data-tooltip="\${s}" data-position="right center"></i>\`
+            s => \`<span data-tooltip="\${s}" data-position="right center"><i class="eye icon"></i></span>\`
         );
     }
     return message;
