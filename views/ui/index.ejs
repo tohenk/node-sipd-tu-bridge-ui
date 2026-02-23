@@ -25,6 +25,7 @@
 <div class="ui bottom attached tab segment" data-tab="error">
 <%- include('error') -%>
 </div>
+<%- include('ticker') -%>
 <%- include('util') -%>
 <%_ script.create('JQuery')
   .useDependencies(['SocketIO'])
@@ -39,6 +40,9 @@ $.uiCon = {
             .on('connect', function() {
                 self.connected = true;
                 console.log('Socket connected');
+                if (self.restarted) {
+                    window.location.reload();
+                }
             })
             .on('disconnect', function() {
                 self.connected = false;
@@ -64,12 +68,17 @@ $.uiCon = {
             })
             .on('error', function() {
                 $.error.reload();
+            })
+            .on('restart', function() {
+                console.log('Server restarted');
+                self.restarted = true;
+                $.ticker.start('${_('A server restart is undergo&hellip;')}');
             });
     }
 }
 `)
   .addInitializer(`
-$('.menu .item').tab({
+$('.menu [data-tab]').tab({
     autoTabActivation: window.location.hash ? window.location.hash.substr(1) : true,
     onLoad(path, params, history) {
         window.location.hash = path;

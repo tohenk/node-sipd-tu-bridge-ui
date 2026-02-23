@@ -16,8 +16,11 @@ img.logo {
 }
 
 @media only screen and (min-width: 1200px) {
+  .ui.container.queue-name {
+    max-width: 20em;
+  }
   .ui.container.queue-result {
-    max-width: 30em;
+    max-width: 22.5em;
   }
   .ui.container.err-data {
     max-width: 40em;
@@ -25,8 +28,11 @@ img.logo {
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1199.98px) {
+  .ui.container.queue-name {
+    max-width: 15em;
+  }
   .ui.container.queue-result {
-    max-width: 25em;
+    max-width: 17.5em;
   }
   .ui.container.err-data {
     max-width: 30em;
@@ -34,8 +40,11 @@ img.logo {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991.98px) {
+  .ui.container.queue-name {
+    max-width: 10em;
+  }
   .ui.container.queue-result {
-    max-width: 20em;
+    max-width: 12.5em;
   }
   .ui.container.err-data {
     max-width: 20em;
@@ -43,11 +52,8 @@ img.logo {
 }
 
 @media only screen and (max-width: 767.98px) {
-  .ui.container.queue-result {
-    max-width: 75vw;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
+  .ui.container.queue-name,
+  .ui.container.queue-result,
   .ui.container.err-data {
     max-width: 75vw;
     margin-left: 0 !important;

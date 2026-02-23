@@ -1,0 +1,67 @@
+<%_ script.create('JQuery')
+  .useDependencies(['SemanticUI/Dialog'])
+  .add(`
+$.ticker = {
+    formatTick(value) {
+        return value.toString().padStart(2, '0');
+    },
+    formatTime(seconds) {
+        const self = this;
+        if (!self.seconds_in_hour) {
+            self.seconds_in_hour = 60 * 60;
+        }
+        if (!self.seconds_in_minute) {
+            self.seconds_in_minute = 60;
+        }
+        const hour = Math.floor(seconds / self.seconds_in_hour);
+        seconds -= hour * self.seconds_in_hour;
+        const minute = Math.floor(seconds / self.seconds_in_minute);
+        seconds -= minute * self.seconds_in_minute;
+        return \`\${self.formatTick(hour)}:\${self.formatTick(minute)}:\${self.formatTick(seconds)}\`;
+    },
+    build() {
+        const self = this;
+        self.start = new Date().getTime();
+        const f = function() {
+            const elapsed = Math.round((new Date().getTime() - self.start) / 1000);
+            $('.elapsed').text(self.formatTime(elapsed));
+        }
+        self.tick = setInterval(f, 1000);
+        f();
+    },
+    start(message) {
+        const self = this;
+        self.dlg = $.ntdlg.create(
+            'restart-timer-dlg',
+            '${_('Please Wait')}',
+            \`<div class="ui grid container">
+            <div class="row">
+                <span class="ui large red text"><i class="clock outline icon"></i><span class="elapsed">00:00:00</span></span>
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <span class="ui large text">\${message}</span>
+            </div>
+            </div>\`,
+            {
+                size: 'small',
+                closable: false,
+                show() {
+                    self.build();
+                },
+                hide() {
+                    if (self.tick) {
+                        clearInterval(self.tick);
+                        delete self.tick;
+                    }
+                }
+            }
+        );
+        $.ntdlg.show(self.dlg);
+    },
+    stop() {
+        const self = this;
+        if (self.dlg) {
+            $.ntdlg.close(self.dlg);
+        }
+    }
+}
+`) -%>

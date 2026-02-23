@@ -125,9 +125,16 @@ class UiController extends Controller {
             }
             res.json(about);
         });
-        this.addRoute('task', 'post', '/task/:op', (req, res, next) => {
+        this.addRoute('task', 'post', '/task/:op', async (req, res, next) => {
             const result = {
                 success: false
+            }
+            /** @type {import('..').SipdApi} */
+            const api = req.app.api;
+            switch (req.params.op) {
+                case 'restart':
+                    Object.assign(result, await api.query({cmd: 'restart'}));
+                    break;
             }
             res.json(result);
         });

@@ -20,6 +20,12 @@
         divider1: {
             type: 'divider'
         },
+        restart: {
+            title: _('Restart Server'),
+        },
+        divider2: {
+            type: 'divider'
+        },
         logout: {
             title: _('Logout'),
             url: route('Security', {name: 'logout'})
@@ -28,7 +34,7 @@
 } -%>
 <%- menu(menus, {mainmenu: true, indentation: 2}) %>
 <%_ script.create('JQuery')
-  .useDependencies(['JQuery/Util', 'SemanticUI/Notification', 'SemanticUI/Dialog/Message'])
+  .useDependencies(['JQuery/Util', 'SemanticUI/Notification', 'SemanticUI/Dialog/Message', 'SemanticUI/Dialog/Confirm'])
   .add(`
 $.tasks = {
     about() {
@@ -57,11 +63,45 @@ $.tasks = {
             f();
         }
     },
+    restart() {
+        const self = this;
+        if (self._restart === undefined) {
+            self._restart = true;
+            $.ntdlg.confirm(
+                'restart-confirm-dlg',
+                '${_('Confirm')}',
+                '${_('Are you sure want to restart the server?')}',
+                $.ntdlg.ICON_QUESTION,
+                function() {
+                    $.post('${route('Ui', {name: 'task', op: 'restart'})}')
+                        .done(function(json) {
+                            self.notify(json);
+                        })
+                        .always(function() {
+                            delete self._restart;
+                        });
+                },
+                function() {
+                    delete self._restart;
+                }
+            );
+        }
+    },
+    notify(result) {
+        if (result.success) {
+            $.notify('${_('Operation successfully submitted!')}', 'success');
+        } else {
+            $.notify('${_('Operation failed!')}', 'error');
+        }
+    },
     init() {
         const self = this;
-        $('.menu-about').on('click', function(e) {
+        $('.menu div.item').on('click', function(e) {
             e.preventDefault();
-            self.about();
+            const menu = $(this).attr('class').split(' ')[0].split('-')[1];
+            if (typeof self[menu] === 'function') {
+                self[menu]();
+            }
         });
     }
 }

@@ -39,6 +39,7 @@
  * @property {StringPromiseFunction} getActivity Get activity logs
  * @property {ObjectPromiseFunction} getCount Get activity count
  * @property {PagedObjectsPromiseFunction} getErrors Get captured errors
+ * @property {QueryFunction} query Perform API query
  */
 
 /**
@@ -93,6 +94,14 @@
  *
  * @callback StringPromiseFunction
  * @returns {Promise<string>}
+ */
+
+/**
+ * A function which returns object Promise.
+ *
+ * @callback QueryFunction
+ * @param {object} data Query data
+ * @returns {Promise<object>}
  */
 
 /* --- END API --- */
