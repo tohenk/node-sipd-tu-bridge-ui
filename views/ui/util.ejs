@@ -29,7 +29,7 @@ $.uiRefresh = function() {
             }
         });
 }
-$.addLog(el, message) {
+$.addLog = function(el, message) {
     message += '\\r\\n';
     if (el.text().substr(-message.length) !== message) {
         el.append(document.createTextNode(message));
