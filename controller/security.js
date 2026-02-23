@@ -26,16 +26,12 @@ const Controller = require('@ntlab/express-controller');
 const Express = require('express').application;
 
 class SecurityController extends Controller {
+
     buildRoutes() {
         this.addRoute('index', 'get', '/login', (req, res, next) => {
-            let redir;
-            if (req.params.r) {
-                redir = req.params.r;
-            } else if (req.query.r) {
-                redir = req.query.r;
-            }
+            const redirect = req.params.r || req.query.r || req.getPath('/');
             res.app.slots.mainmenu.enabled = false;
-            res.render('security/login', {redirect: redir ? redir : req.getPath('/')});
+            res.render('security/login', {redirect});
         });
         this.addRoute('login', 'post', '/login', (req, res, next) => {
             const result = {
@@ -44,7 +40,7 @@ class SecurityController extends Controller {
             if (req.user.authenticate(req.body.username, req.body.password)) {
                 req.user.login();
                 result.success = true;
-                result.url = req.body.continue ? req.body.continue : req.getPath('/');
+                result.url = req.body.continue ?? req.getPath('/');
             } else {
                 result.error = this._('Invalid username and/or password');
             }
@@ -66,7 +62,7 @@ class SecurityController extends Controller {
      * @returns {SecurityController}
      */
     static create(app, prefix = '/') {
-        const controller = new SecurityController({prefix: prefix, name: 'Security'});
+        const controller = new SecurityController({prefix, name: 'Security'});
         app.use(prefix, controller.router);
         return controller;
     }
