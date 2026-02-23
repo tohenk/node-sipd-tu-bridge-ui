@@ -29,6 +29,15 @@ $.uiRefresh = function() {
             }
         });
 }
+$.addLog(el, message) {
+    message += '\\r\\n';
+    if (el.text().substr(-message.length) !== message) {
+        el.append(document.createTextNode(message));
+        el.scrollTop(el[0].scrollHeight - el.height());
+        return true;
+    }
+    return false;
+}
 $.hidePayload = function(message) {
     if (message) {
         message = message.replace(

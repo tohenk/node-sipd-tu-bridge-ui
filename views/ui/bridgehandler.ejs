@@ -4,14 +4,14 @@ $.bridge = {
     bridges: {},
     getLog(name) {
         const self = this;
-        $.get('${route('Ui', {name: 'log', bridge: 'BRIDGE'})}'.replace(/BRIDGE/, name))
-            .done(function(json) {
-                if (json.logs) {
-                    const log = $(self.bridges[name].log);
-                    log.text(json.logs);
-                    self.bridges[name].time = json.time;
-                }
-            });
+        if (self.bridges[name]) {
+            $.get('${route('Ui', {name: 'log', bridge: 'BRIDGE'})}'.replace(/BRIDGE/, name))
+                .done(function(json) {
+                    if (json.logs && $.addLog(self.bridges[name].log, json.logs)) {
+                        self.bridges[name].time = json.time;
+                    }
+                });
+        }
     },
     addLog(name, data) {
         const self = this;
@@ -19,11 +19,7 @@ $.bridge = {
             self.bridges[name] &&
             (self.bridges[name].time === undefined || data.time >= self.bridges[name].time)
         ) {
-            const log = $(self.bridges[name].log);
-            const message = data.message + '\\r\\n';
-            if (log.text().substr(-message.length) !== message) {
-                log.append(message);
-                log.scrollTop(log[0].scrollHeight - log.height());
+            if ($.addLog(self.bridges[name].log, data.message)) {
                 self.bridges[name].time = data.time;
             }
         }

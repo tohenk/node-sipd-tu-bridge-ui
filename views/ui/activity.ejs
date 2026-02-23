@@ -10,8 +10,7 @@ $.activity = {
         const self = this;
         $.get(self.url)
             .done(function(json) {
-                if (json.logs) {
-                    self.el.text(json.logs);
+                if (json.logs && $.addLog(self.el, json.logs)) {
                     self.time = json.time;
                 }
             });
@@ -19,10 +18,7 @@ $.activity = {
     add(data) {
         const self = this;
         if (self.time === undefined || data.time >= self.time) {
-            const message = data.message + '\\r\\n';
-            if (self.el.text().substr(-message.length) !== message) {
-                self.el.append(message);
-                self.el.scrollTop(self.el[0].scrollHeight - self.el.height());
+            if ($.addLog(self.el, data.message)) {
                 self.time = data.time;
             }
         }
