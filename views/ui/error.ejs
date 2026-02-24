@@ -86,6 +86,7 @@ $.error.toPayload = function(data, title) {
     }
 }
 $.error.handle = function(el) {
+    const self = this;
     switch (el.data('op')) {
         case 'view':
             let content, size = 'large';
