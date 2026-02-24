@@ -132,6 +132,11 @@ class UiController extends Controller {
             /** @type {import('..').SipdApi} */
             const api = req.app.api;
             switch (req.params.op) {
+                case 'remove':
+                    if  (req.body.error) {
+                        Object.assign(result, await api.query({cmd: 'clean-err', error: req.body.error}));
+                    }
+                    break;
                 case 'restart':
                     Object.assign(result, await api.query({cmd: 'restart'}));
                     break;

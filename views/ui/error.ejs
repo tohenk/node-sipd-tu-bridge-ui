@@ -6,11 +6,12 @@
       <th><%= _('Screen') %></th>
       <th><%= _('Error') %></th>
       <th><%= _('Data') %></th>
+      <th><%= _('Action') %></th>
     </tr>
   </thead>
 </table>
 <%_ script.create('JQuery')
-  .useDependencies(['SemanticUI/Loader', 'SemanticUI/Dialog'])
+  .useDependencies(['SemanticUI/Loader', 'SemanticUI/Dialog/Confirm'])
   .add(`
 $.error = $.loader($('div[data-tab="error"] table'), {
     url: '${route('Ui', {name: 'error', page: 'PAGE'})}',
@@ -27,23 +28,44 @@ $.error = $.loader($('div[data-tab="error"] table'), {
                 counter.addClass('hidden');
             }
         }
-        $('a.err-img-view').on('click', function(e) {
+        $('a.err-clicker').on('click', function(e) {
             e.preventDefault();
             const a = $(this);
-            const dlg = $.ntdlg.create(
-                'err-img-view-dlg',
-                a.data('tooltip'),
-                \`<img class="ui fluid image" src="\${a.find('img').attr('src')}" style="max-height: 70vh;">\`, {
-                    size: 'fullscreen',
-                    buttons: {
-                        okay: {
-                            type: 'green approve',
-                            caption: '<i class="check icon"></i>${_('Ok')}',
+            switch (a.data('op')) {
+                case 'view':
+                    const dlg = $.ntdlg.create(
+                        'err-img-view-dlg',
+                        a.data('tooltip'),
+                        \`<img class="ui fluid image" src="\${a.find('img').attr('src')}" style="max-height: 70vh;">\`, {
+                            size: 'fullscreen',
+                            buttons: {
+                                okay: {
+                                    type: 'green approve',
+                                    caption: '<i class="check icon"></i>${_('Ok')}',
+                                }
+                            }
                         }
-                    }
-                }
-            );
-            $.ntdlg.show(dlg);
+                    );
+                    $.ntdlg.show(dlg);
+                    break;
+                case 'delete':
+                    $.ntdlg.confirm(
+                        'err-delete-confirm-dlg',
+                        '${_('Confirm')}',
+                        '${_('Are you sure want to remove error <code>%ERR%</code>?')}'.replace(/%ERR%/g, a.data('filename')),
+                        $.ntdlg.ICON_QUESTION,
+                        function() {
+                            $.post('${route('Ui', {name: 'task', op: 'remove'})}', {error: a.data('filename')})
+                                .done(function(json) {
+                                    $.tasks.notify(json);
+                                    if (json.success) {
+                                        self.reload();
+                                    }
+                                });
+                        }
+                    );
+                    break;
+            }
         });
         if (self.loading) {
             self.loading = false;
@@ -53,14 +75,17 @@ $.error = $.loader($('div[data-tab="error"] table'), {
 $.error.toRow = function(data) {
     return $(
 \`<tr><td>\${data.nr}</td>
-    <td>\${this.toImg($.toStr(data.image), data.filename)}</td>
-    <td>\${$.toStr(data.error)}</td>
-    <td><div class="ui scrolling container err-data">\${$.hidePayload($.toStr(data.data))}</div></td>
+  <td>\${this.toImg($.toStr(data.image), data.filename)}</td>
+  <td>\${$.toStr(data.error)}</td>
+  <td><div class="ui scrolling container err-data">\${$.hidePayload($.toStr(data.data))}</div></td>
+  <td>
+    <a href="#" class="err-clicker" data-op="delete" data-filename="\${data.filename}" role="button"><i class="trash alternate outline red icon"></i></a>
+  </td>
 </tr>\`);
 }
 $.error.toImg = function(data, alt) {
     if (data) {
-        return \`<a href="#" class="err-img-view" data-tooltip="\${alt}" data-position="right center">
+        return \`<a href="#" class="err-clicker" data-op="view" data-tooltip="\${alt}" data-position="right center">
 <img class="ui medium rounded bordered image" src="\${data}" alt="\${alt}">
 </a>\`;
     }
