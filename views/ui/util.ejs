@@ -47,12 +47,12 @@ $.hidePayload = function(message) {
     }
     return message;
 }
+$.isPayload = function(data) {
+    return Array.isArray(data) || typeof data === 'object' && data.constructor.name === 'Object';
+}
 $.toStr = function(o) {
-    if (
-        Array.isArray(o) ||
-        typeof o === 'object' && o.constructor.name === 'Object'
-    ) {
-        return JSON.stringify(o);
+    if ($.isPayload(o)) {
+        return JSON.stringify(o, null, '  ');
     } else if (o !== undefined && o !== null) {
         return o.toString();
     }

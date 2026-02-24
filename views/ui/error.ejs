@@ -30,42 +30,7 @@ $.error = $.loader($('div[data-tab="error"] table'), {
         }
         $('a.err-clicker').on('click', function(e) {
             e.preventDefault();
-            const a = $(this);
-            switch (a.data('op')) {
-                case 'view':
-                    const dlg = $.ntdlg.create(
-                        'err-img-view-dlg',
-                        a.data('tooltip'),
-                        \`<img class="ui fluid image" src="\${a.find('img').attr('src')}" style="max-height: 70vh;">\`, {
-                            size: 'fullscreen',
-                            buttons: {
-                                okay: {
-                                    type: 'green approve',
-                                    caption: '<i class="check icon"></i>${_('Ok')}',
-                                }
-                            }
-                        }
-                    );
-                    $.ntdlg.show(dlg);
-                    break;
-                case 'delete':
-                    $.ntdlg.confirm(
-                        'err-delete-confirm-dlg',
-                        '${_('Confirm')}',
-                        '${_('Are you sure want to remove error <code>%ERR%</code>?')}'.replace(/%ERR%/g, a.data('filename')),
-                        $.ntdlg.ICON_QUESTION,
-                        function() {
-                            $.post('${route('Ui', {name: 'task', op: 'remove'})}', {error: a.data('filename')})
-                                .done(function(json) {
-                                    $.tasks.notify(json);
-                                    if (json.success) {
-                                        self.reload();
-                                    }
-                                });
-                        }
-                    );
-                    break;
-            }
+            self.handle($(this));
         });
         if (self.loading) {
             self.loading = false;
@@ -73,11 +38,11 @@ $.error = $.loader($('div[data-tab="error"] table'), {
     }
 });
 $.error.toRow = function(data) {
-    return $(
-\`<tr><td>\${data.nr}</td>
+    return $(\`
+<tr><td>\${data.nr}</td>
   <td>\${this.toImg($.toStr(data.image), data.filename)}</td>
-  <td>\${$.toStr(data.error)}</td>
-  <td><div class="ui scrolling container err-data">\${$.hidePayload($.toStr(data.data))}</div></td>
+  <td>\${this.toPayload(data.error, '${_('Error Message')}')}</td>
+  <td>\${this.toPayload(data.data, '${_('Error Data')}')}</td>
   <td>
     <a href="#" class="err-clicker" data-op="delete" data-filename="\${data.filename}" role="button"><i class="trash alternate outline red icon"></i></a>
   </td>
@@ -85,9 +50,81 @@ $.error.toRow = function(data) {
 }
 $.error.toImg = function(data, alt) {
     if (data) {
-        return \`<a href="#" class="err-clicker" data-op="view" data-tooltip="\${alt}" data-position="right center">
-<img class="ui medium rounded bordered image" src="\${data}" alt="\${alt}">
+        return \`
+<a href="#" class="err-clicker" data-op="view" data-title="\${alt}" data-tooltip="\${alt}" data-position="right center">
+  <img class="ui medium rounded bordered image" src="\${data}" alt="\${alt}">
 </a>\`;
+    }
+}
+$.error.toPayload = function(data, title) {
+    if (data) {
+        if (typeof data === 'string' && data.startsWith('{')) {
+            try {
+                data = JSON.parse(data);
+            }
+            catch (err) {
+            }
+        }
+        const payload = $.toStr(data);
+        let excerpt = payload;
+        if (excerpt.length > 100) {
+            excerpt = excerpt.substr(0, 100);
+            if (excerpt.includes('\\n')) {
+                excerpt = excerpt.substr(0, excerpt.lastIndexOf('\\n'));
+            } else if (excerpt.includes(' ')) {
+                excerpt = excerpt.substr(0, excerpt.lastIndexOf(' '));
+            } else if (excerpt.includes('-')) {
+                excerpt = excerpt.substr(0, excerpt.lastIndexOf('-'));
+            }
+            excerpt += '&hellip;';
+        }
+        return \`
+<a href="#" class="err-clicker" data-op="view" data-title="\${title}">
+  <span>\${excerpt}</span>
+  <pre style="display: none;">\${payload}</pre>
+</a>\`;
+    }
+}
+$.error.handle = function(el) {
+    switch (el.data('op')) {
+        case 'view':
+            let content, size = 'large';
+            const img = el.find('img'), pre = el.find('pre');
+            if (img.length) {
+                content = \`<img class="ui fluid image" src="\${img.attr('src')}" style="max-height: 70vh;">\`;
+                size = 'fullscreen';
+            }
+            if (pre.length) {
+                content = \`<div class="ui fluid scrolling container"><pre>\${pre.text()}</pre></div>\`;
+            }
+            const dlg = $.ntdlg.create('err-view-dlg', el.data('title'), content, {
+                size,
+                buttons: {
+                    okay: {
+                        type: 'green approve',
+                        caption: '<i class="check icon"></i>${_('Ok')}',
+                    }
+                }
+            });
+            $.ntdlg.show(dlg);
+            break;
+        case 'delete':
+            $.ntdlg.confirm(
+                'err-delete-confirm-dlg',
+                '${_('Confirm')}',
+                '${_('Are you sure want to remove error <code>%ERR%</code>?')}'.replace(/%ERR%/g, el.data('filename')),
+                $.ntdlg.ICON_QUESTION,
+                function() {
+                    $.post('${route('Ui', {name: 'task', op: 'remove'})}', {error: el.data('filename')})
+                        .done(function(json) {
+                            $.tasks.notify(json);
+                            if (json.success) {
+                                self.reload();
+                            }
+                        });
+                }
+            );
+            break;
     }
 }
 $.error.reload = function() {

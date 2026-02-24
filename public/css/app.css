@@ -22,8 +22,11 @@ img.logo {
   .ui.container.queue-result {
     max-width: 22.5em;
   }
+  .ui.container.err-message {
+    max-width: 20em;
+  }
   .ui.container.err-data {
-    max-width: 40em;
+    max-width: 25em;
   }
 }
 
@@ -34,8 +37,11 @@ img.logo {
   .ui.container.queue-result {
     max-width: 17.5em;
   }
+  .ui.container.err-message {
+    max-width: 15em;
+  }
   .ui.container.err-data {
-    max-width: 30em;
+    max-width: 20em;
   }
 }
 
@@ -46,14 +52,18 @@ img.logo {
   .ui.container.queue-result {
     max-width: 12.5em;
   }
+  .ui.container.err-message {
+    max-width: 12.5em;
+  }
   .ui.container.err-data {
-    max-width: 20em;
+    max-width: 15em;
   }
 }
 
 @media only screen and (max-width: 767.98px) {
   .ui.container.queue-name,
   .ui.container.queue-result,
+  .ui.container.err-message,
   .ui.container.err-data {
     max-width: 75vw;
     margin-left: 0 !important;
