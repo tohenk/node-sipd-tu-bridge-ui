@@ -11,7 +11,7 @@
     </div>
     <div class="twelve wide column">
       <%_ bridges.forEach(bridge => { -%>
-      <div class="ui form bridge <%= bridge.name %>" style="display: none;">
+      <div class="ui form bridge <%= bridge.name %>" data-bridge="<%= bridge.name %>" style="display: none;">
         <%_ Object.keys(bridge.stat).forEach(stat => { -%>
         <div class="fields">
           <div class="six wide field"><label><%= _(bridge.stat[stat].label) %></label></div>

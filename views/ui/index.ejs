@@ -8,22 +8,22 @@
   <a class="item" data-tab="error"><%= _('Error') %> <span class="ui hidden tiny label"></span></a>
 </div>
 <div class="ui bottom attached tab segment" data-tab="status">
-<%- include('status') -%>
+  <%- indent(include('status'), 2) -%>
 </div>
 <div class="ui bottom attached tab segment" data-tab="activity">
-<%- include('activity') -%>
+  <%- indent(include('activity'), 2) -%>
 </div>
 <div class="ui bottom attached tab segment" data-tab="queue">
-<%- include('queue') -%>
+  <%- indent(include('queue'), 2) -%>
 </div>
 <%- include('bridgehandler') -%>
 <%_ if (api.bridges.length) { -%>
 <div class="ui bottom attached tab segment" data-tab="bridge">
-<%- include('bridge') -%>
+  <%- indent(include('bridge'), 2) -%>
 </div>
 <%_ } -%>
 <div class="ui bottom attached tab segment" data-tab="error">
-<%- include('error') -%>
+  <%- indent(include('error'), 2) -%>
 </div>
 <%- include('ticker') -%>
 <%- include('util') -%>

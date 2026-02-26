@@ -25,6 +25,11 @@
 const Controller = require('@ntlab/express-controller');
 const Express = require('express').application;
 
+/**
+ * Security controller provides user authentication mechanism.
+ *
+ * @author Toha <tohenk@yahoo.com>
+ */
 class SecurityController extends Controller {
 
     buildRoutes() {

@@ -39,21 +39,21 @@ $.error = $.loader($('div[data-tab="error"] table'), {
 });
 $.error.toRow = function(data) {
     return $(\`
-<tr><td>\${data.nr}</td>
-  <td>\${this.toImg($.toStr(data.image), data.filename)}</td>
-  <td>\${this.toPayload(data.error, '${_('Error Message')}')}</td>
-  <td>\${this.toPayload(data.data, '${_('Error Data')}')}</td>
-  <td>
-    <a href="#" class="err-clicker" data-op="delete" data-filename="\${data.filename}" role="button"><i class="trash alternate outline red icon"></i></a>
-  </td>
-</tr>\`);
+      <tr><td>\${data.nr}</td>
+        <td>\${this.toImg($.toStr(data.image), data.filename)}</td>
+        <td>\${this.toPayload(data.error, '${_('Error Message')}')}</td>
+        <td>\${this.toPayload(data.data, '${_('Error Data')}')}</td>
+        <td>
+          <a href="#" class="err-clicker" data-op="delete" data-filename="\${data.filename}" role="button"><i class="trash alternate outline red icon"></i></a>
+        </td>
+      </tr>\`);
 }
 $.error.toImg = function(data, alt) {
     if (data) {
         return \`
-<a href="#" class="err-clicker" data-op="view" data-title="\${alt}" data-tooltip="\${alt}" data-position="right center">
-  <img class="ui medium rounded bordered image" src="\${data}" alt="\${alt}">
-</a>\`;
+          <a href="#" class="err-clicker" data-op="view" data-title="\${alt}" data-tooltip="\${alt}" data-position="right center">
+            <img class="ui medium rounded bordered image" src="\${data}" alt="\${alt}">
+          </a>\`;
     }
 }
 $.error.toPayload = function(data, title) {
@@ -79,10 +79,10 @@ $.error.toPayload = function(data, title) {
             excerpt += '&hellip;';
         }
         return \`
-<a href="#" class="err-clicker" data-op="view" data-title="\${title}">
-  <span>\${excerpt}</span>
-  <pre style="display: none;">\${payload}</pre>
-</a>\`;
+          <a href="#" class="err-clicker" data-op="view" data-title="\${title}">
+            <span>\${excerpt}</span>
+            <pre style="display: none;">\${payload}</pre>
+          </a>\`;
     }
 }
 $.error.handle = function(el) {

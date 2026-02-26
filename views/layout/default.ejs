@@ -15,17 +15,17 @@
 <body<% if (mainmenu) { %> class="with-menu"<% } %>>
   <%_ if (mainmenu) { -%>
   <section class="ui fixed inverted menu">
-  <%- mainmenu -%>
+    <%- indent(mainmenu, 4) -%>
   </section>
   <%_ } -%>
   <main class="ui container">
     <%_ if (title.length) { -%>
     <h1 class="ui dividing header"><%= title %></h1>
     <%_ } -%>
-    <%- content -%>
+    <%- indent(content, 4) -%>
   </main>
   <%_ if ((addons = slot('addons')) && (addons = include(addons))) { -%>
-  <%- addons -%>
+  <%- indent(addons, 2) -%>
   <%_ } -%>
   <%_ javascripts().forEach(js => { -%>
   <script type="text/javascript" src="<%- path(js) %>"></script>

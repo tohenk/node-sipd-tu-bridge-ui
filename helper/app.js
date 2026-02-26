@@ -32,6 +32,8 @@ const { minify_sync } = require('terser');
 
 /**
  * Express app middleware.
+ *
+ * @author Toha <tohenk@yahoo.com>
  */
 class AppFunctions extends HelperFunctions {
 

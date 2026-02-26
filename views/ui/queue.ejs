@@ -37,14 +37,14 @@ $.queue = $.loader($('div[data-tab="queue"] table'), {
 });
 $.queue.toRow = function(data) {
     return $(\`
-<tr><td>\${data.nr}</td>
-  <td>\${$.toStr(data.id)}</td>
-  <td>\${$.toStr(data.type)}</td>
-  <td><div class="ui scrolling container queue-name">\${$.hidePayload($.toStr(data.name))}</div></td>
-  <td>\${this.toStatus(data.status)}</td>
-  <td><div class="ui scrolling container queue-result">\${$.hidePayload($.toStr(data.result))}</div></td>
-  <td>\${$.toStr(data.time)}</td>
-</tr>\`);
+      <tr><td>\${data.nr}</td>
+        <td>\${$.toStr(data.id)}</td>
+        <td>\${$.toStr(data.type)}</td>
+        <td><div class="ui scrolling container queue-name">\${$.hidePayload($.toStr(data.name))}</div></td>
+        <td>\${this.toStatus(data.status)}</td>
+        <td><div class="ui scrolling container queue-result">\${$.hidePayload($.toStr(data.result))}</div></td>
+        <td>\${$.toStr(data.time)}</td>
+      </tr>\`);
 }
 $.queue.toStatus = function(data) {
     const icon = {

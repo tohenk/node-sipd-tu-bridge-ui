@@ -27,6 +27,11 @@ const path = require('path');
 const Controller = require('@ntlab/express-controller');
 const Express = require('express').application;
 
+/**
+ * Ui controller provides user interface interaction.
+ *
+ * @author Toha <tohenk@yahoo.com>
+ */
 class UiController extends Controller {
 
     buildRoutes() {
