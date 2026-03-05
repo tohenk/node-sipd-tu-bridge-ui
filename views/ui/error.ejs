@@ -96,7 +96,7 @@ $.error.handle = function(el) {
                 size = 'fullscreen';
             }
             if (pre.length) {
-                content = \`<div class="ui fluid scrolling container"><pre>\${pre.text()}</pre></div>\`;
+                content = \`<div class="ui fluid scrolling container"><pre>\${$.safeStr(pre.text())}</pre></div>\`;
             }
             const dlg = $.ntdlg.create('err-view-dlg', el.data('title'), content, {
                 size,

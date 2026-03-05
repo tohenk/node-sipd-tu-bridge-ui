@@ -74,11 +74,20 @@ $.hidePayload = function(message) {
 $.isPayload = function(data) {
     return Array.isArray(data) || typeof data === 'object' && data.constructor.name === 'Object';
 }
+$.safeStr = function(s) {
+    if (s !== '') {
+        const tn = document.createTextNode(s);
+        const pn = document.createElement('p');
+        pn.appendChild(tn);
+        s = pn.innerHTML;
+    }
+    return s;
+}
 $.toStr = function(o) {
     if ($.isPayload(o)) {
         return JSON.stringify(o, null, '  ');
     } else if (o !== undefined && o !== null) {
-        return o.toString();
+        return $.safeStr(o.toString());
     }
     return '';
 }
