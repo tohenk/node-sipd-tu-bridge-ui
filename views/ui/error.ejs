@@ -92,7 +92,7 @@ $.error.handle = function(el) {
             let content, size = 'large';
             const img = el.find('img'), pre = el.find('pre');
             if (img.length) {
-                content = \`<img class="ui fluid image" src="\${img.attr('src')}" style="max-height: 70vh;">\`;
+                content = \`<img class="ui fluid image v-max" src="\${img.attr('src')}">\`;
                 size = 'fullscreen';
             }
             if (pre.length) {
@@ -113,7 +113,7 @@ $.error.handle = function(el) {
             $.ntdlg.confirm(
                 'err-delete-confirm-dlg',
                 '${_('Confirm')}',
-                '${_('Are you sure want to remove error <code>%ERR%</code>?')}'.replace(/%ERR%/g, el.data('filename')),
+                '${_('Are you sure want to remove error <span class="ui error text">%ERR%</span>?')}'.replace(/%ERR%/g, el.data('filename')),
                 $.ntdlg.ICON_QUESTION,
                 function() {
                     $.post('${route('Ui', {name: 'task', op: 'remove'})}', {error: el.data('filename')})

@@ -43,6 +43,7 @@ class UiController extends Controller {
                 bridge.stat = await bridge.getStats();
                 bridge.last = await bridge.getLast();
                 bridge.current = await bridge.getCurrent();
+                bridge.logs = await bridge.getLogFiles();
             }
             const socketOptions = {};
             if (req.app.get('root') !== '/') {
@@ -114,6 +115,37 @@ class UiController extends Controller {
             result.pages = req.app.locals.pager(result.count, result.size, result.page);
             res.json(result);
         });
+        this.addRoute('task', 'post', '/task/:op', async (req, res, next) => {
+            const result = {
+                success: false
+            }
+            let retval;
+            /** @type {import('..').SipdApi} */
+            const api = req.app.api;
+            switch (req.params.op) {
+                case 'log':
+                    if  (req.body.seq) {
+                        if (req.body.log) {
+                            retval = await api.query({cmd: 'log-file', log: req.body.log, seq: req.body.seq});
+                        } else {
+                            retval = await api.query({cmd: 'log-file', seq: req.body.seq});
+                        }
+                    }
+                    break;
+                case 'remove':
+                    if  (req.body.queue) {
+                        retval = await api.query({cmd: 'remove-queue', queue: req.body.queue});
+                    }
+                    if  (req.body.error) {
+                        retval = await api.query({cmd: 'clean-err', error: req.body.error});
+                    }
+                    break;
+                case 'restart':
+                    retval = await api.query({cmd: 'restart'});
+                    break;
+            }
+            res.json({...result, ...(retval || {})});
+        });
         this.addRoute('about', 'get', '/about', (req, res, next) => {
             let about;
             if (req.app.about) {
@@ -129,24 +161,6 @@ class UiController extends Controller {
                 }
             }
             res.json(about);
-        });
-        this.addRoute('task', 'post', '/task/:op', async (req, res, next) => {
-            const result = {
-                success: false
-            }
-            /** @type {import('..').SipdApi} */
-            const api = req.app.api;
-            switch (req.params.op) {
-                case 'remove':
-                    if  (req.body.error) {
-                        Object.assign(result, await api.query({cmd: 'clean-err', error: req.body.error}));
-                    }
-                    break;
-                case 'restart':
-                    Object.assign(result, await api.query({cmd: 'restart'}));
-                    break;
-            }
-            res.json(result);
         });
     }
 

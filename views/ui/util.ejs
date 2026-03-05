@@ -38,6 +38,30 @@ $.addLog = function(el, message) {
     }
     return false;
 }
+$.viewLog = function(title, log, seq) {
+    $.post('${route('Ui', {name: 'task', op: 'log'})}', {log, seq})
+        .done(function(json) {
+            if (json.success) {
+                const logs = document.createTextNode(json.logs);
+                const content = \`<div class="ui fluid scrolling container v-min v-max"><pre></pre></div>\`;
+                const dlg = $.ntdlg.create('log-view-dlg', title, content, {
+                    size: 'fullscreen',
+                    show() {
+                        dlg.find('pre').append(logs);
+                    },
+                    buttons: {
+                        okay: {
+                            type: 'green approve',
+                            caption: '<i class="check icon"></i>${_('Ok')}',
+                        }
+                    }
+                });
+                $.ntdlg.show(dlg);
+            } else {
+                $.tasks.notify(json);
+            }
+        });
+}
 $.hidePayload = function(message) {
     if (message) {
         message = message.replace(

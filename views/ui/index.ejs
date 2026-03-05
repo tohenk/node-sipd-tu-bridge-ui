@@ -1,11 +1,11 @@
 <div class="ui top attached stackable tabular menu">
   <a class="item" data-tab="status"><%= _('Status') %></a>
   <a class="item" data-tab="activity"><%= _('Activity') %></a>
-  <a class="item" data-tab="queue"><%= _('Queue') %> <span class="ui hidden tiny label"></span></a>
+  <a class="item" data-tab="queue"><%= _('Queue') %> <span class="ui hidden blue tiny label"></span></a>
   <%_ if (api.bridges.length) { -%>
-  <a class="item" data-tab="bridge"><%= _('Bridge') %> <span class="ui tiny label"><%= api.bridges.length %></span></a>
+  <a class="item" data-tab="bridge"><%= _('Bridge') %> <span class="ui green tiny label"><%= api.bridges.length %></span></a>
   <%_ } -%>
-  <a class="item" data-tab="error"><%= _('Error') %> <span class="ui hidden tiny label"></span></a>
+  <a class="item" data-tab="error"><%= _('Error') %> <span class="ui hidden red tiny label"></span></a>
 </div>
 <div class="ui bottom attached tab segment" data-tab="status">
   <%- indent(include('status'), 2) -%>
@@ -82,6 +82,19 @@ $('.menu [data-tab]').tab({
     autoTabActivation: window.location.hash ? window.location.hash.substr(1) : true,
     onLoad(path, params, history) {
         window.location.hash = path;
+    }
+});
+$('select[data-log]').on('change', function(e) {
+    e.preventDefault();
+    const el = $(this);
+    const seq = el.val();
+    if (seq !== '') {
+        const log = el.data('log');
+        const logname = el.find(\`option[value="\${seq}"]\`).text();
+        const title = el.data('title')
+            .replace(/%LOG%/g, logname)
+            .replace(/%NAME%/g, log?.toUpperCase());
+        $.viewLog(title, log, seq);
     }
 });
 $.uiCon.init();

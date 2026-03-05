@@ -18,7 +18,7 @@
   <div class="twelve wide column">
     <div class="ui fluid card">
       <div class="content">
-        <div class="ui right floated tiny label"><%= bridge.year %></div>
+        <div class="ui red right floated tiny label"><%= bridge.year %></div>
         <div class="item header"><i class="ui laptop code icon"></i><%= bridge.name.toUpperCase() %></div>
       </div>
       <div class="extra content" data-bridge="<%= bridge.name %>">
@@ -71,12 +71,16 @@
   </div>
   <%_ }) -%>
   <%_ } else { -%>
-  <div class="ui placeholder segment" style="min-height: 75vh;">
-    <div class="ui icon header">
-      <i class="laptop code icon"></i>
-      <div class="ui big hidden divider"></div>
-      <%= _('Currently, no connected bridge available.') %><br/>
-      <%= _('Once a connection established, it will appear here.') %>
+  <div class="row">
+    <div class="twelve wide column">
+      <div class="ui placeholder segment v-min">
+        <div class="ui icon header">
+          <i class="laptop code icon"></i>
+          <div class="ui big hidden divider"></div>
+          <%= _('Currently, no configured bridge available.') %><br/>
+          <%= _('Once a bridge is configured, it will appear here.') %>
+        </div>
+      </div>
     </div>
   </div>
   <%_ } -%>

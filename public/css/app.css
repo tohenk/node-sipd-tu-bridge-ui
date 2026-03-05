@@ -1,3 +1,8 @@
+:root {
+  --viewport-h-limit: 70vh;
+  --viewport-w-limit: 70vw;
+}
+
 body.with-menu {
   padding-top: 5em;
 }
@@ -13,6 +18,14 @@ body:not([class]) main, #login-container {
 
 img.logo {
   margin-right: 1em !important;
+}
+
+.v-max {
+  max-height: var(--viewport-h-limit) !important;
+}
+
+.v-min {
+  min-height: var(--viewport-h-limit) !important;
 }
 
 @media only screen and (min-width: 1200px) {
@@ -47,10 +60,10 @@ img.logo {
 
 @media only screen and (min-width: 768px) and (max-width: 991.98px) {
   .ui.container.queue-name {
-    max-width: 10em;
+    max-width: 8em;
   }
   .ui.container.queue-result {
-    max-width: 12.5em;
+    max-width: 10em;
   }
   .ui.container.err-message {
     max-width: 12.5em;
@@ -65,7 +78,7 @@ img.logo {
   .ui.container.queue-result,
   .ui.container.err-message,
   .ui.container.err-data {
-    max-width: 75vw;
+    max-width: var(--viewport-w-limit);
     margin-left: 0 !important;
     margin-right: 0 !important;
   }

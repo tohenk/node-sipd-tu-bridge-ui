@@ -22,7 +22,20 @@
  * SOFTWARE.
  */
 
-/* --- BEGIN API --- */
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const session = require('express-session');
+const FileStore = require('session-file-store')(session);
+const { Helper, Security, Factory } = require('@ntlab/express-middleware');
+const { ScriptManager, ScriptAsset } = require('@ntlab/ntjs');
+const { Assets, CDN } = require('@ntlab/ntjs-assets');
+
+// register script repository
+require('@ntlab/ntjs-repo')();
+
+/* --- BEGIN API V1 --- */
 
 /**
  * SIPD Penatausahaan Bridge main application.
@@ -35,10 +48,10 @@
  * @property {object} config Configuration
  * @property {SipdBridge[]} bridges Bridges
  * @property {AuthenticateFunction} authenticate Perform usename and password authentication
- * @property {PagedObjectsPromiseFunction} getQueues Get queues
- * @property {StringPromiseFunction} getActivity Get activity logs
- * @property {ObjectPromiseFunction} getCount Get activity count
- * @property {PagedObjectsPromiseFunction} getErrors Get captured errors
+ * @property {PagedObjectsFunction} getQueues Get queues
+ * @property {ActivityFunction} getActivity Get activity logs
+ * @property {ObjectFunction} getCount Get activity count
+ * @property {PagedObjectsFunction} getErrors Get captured errors
  * @property {QueryFunction} query Perform API query
  */
 
@@ -48,10 +61,11 @@
  * @typedef {Object} SipdBridge
  * @property {string} name Name
  * @property {number} year Year
- * @property {ObjectPromiseFunction} getStats Get bridge stats
- * @property {StringPromiseFunction} getLogs Get bridge logs
- * @property {ObjectPromiseFunction} getLast Get last queue
- * @property {ObjectPromiseFunction} getCurrent Get current processing queue
+ * @property {ObjectFunction} getStats Get bridge stats
+ * @property {ActivityFunction} getLogs Get bridge logs
+ * @property {LogFilesFunction} getLogFiles Get bridge addiitonal log files
+ * @property {ObjectFunction} getLast Get last queue
+ * @property {ObjectFunction} getCurrent Get current processing queue
  */
 
 /**
@@ -74,50 +88,46 @@
  */
 
 /**
- * A function which returns paged objects Promise.
+ * Get objects at specified page with size of limit. If none specified
+ * it returns first page with default size limit (either 10 or 25).
  *
- * @callback PagedObjectsPromiseFunction
- * @param {number} page Page number
- * @param {number} size Page size
+ * @callback PagedObjectsFunction
+ * @param {?number} page Page number
+ * @param {?number} size Page size
  * @returns {Promise<object[]>}
  */
 
 /**
- * A function which returns object Promise.
+ * Get miscellanous object such as queue or log.
  *
- * @callback ObjectPromiseFunction
+ * @callback ObjectFunction
  * @returns {Promise<object>}
  */
 
 /**
- * A function which returns string Promise.
+ * Get string content such as activity logs.
  *
- * @callback StringPromiseFunction
+ * @callback ActivityFunction
+ * @param {?string} seq Sequence number
  * @returns {Promise<string>}
  */
 
 /**
- * A function which returns object Promise.
+ * Query api and return result object.
  *
  * @callback QueryFunction
  * @param {object} data Query data
  * @returns {Promise<object>}
  */
 
+/**
+ * Get additional log files.
+ *
+ * @callback LogFilesFunction
+ * @returns {Promise<[{name: string, seq: string, time: number}]>}
+ */
+
 /* --- END API --- */
-
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const logger = require('morgan');
-const session = require('express-session');
-const FileStore = require('session-file-store')(session);
-const { Helper, Security, Factory } = require('@ntlab/express-middleware');
-const { ScriptManager, ScriptAsset } = require('@ntlab/ntjs');
-const { Assets, CDN } = require('@ntlab/ntjs-assets');
-
-// register script repository
-require('@ntlab/ntjs-repo')();
 
 /**
  * Express application.

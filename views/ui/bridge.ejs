@@ -12,12 +12,29 @@
     <div class="twelve wide column">
       <%_ bridges.forEach(bridge => { -%>
       <div class="ui form bridge <%= bridge.name %>" data-bridge="<%= bridge.name %>" style="display: none;">
-        <%_ Object.keys(bridge.stat).forEach(stat => { -%>
-        <div class="fields">
-          <div class="six wide field"><label><%= _(bridge.stat[stat].label) %></label></div>
-          <div class="ten wide field"><input type="text" value="<%- bridge.stat[stat].value %>" data-key="<%= stat %>" readonly></div>
+        <div class="ui two column stackable grid">
+          <div class="column">
+            <%_ Object.keys(bridge.stat).forEach(stat => { -%>
+            <div class="two fields">
+              <div class="field"><label><%= _(bridge.stat[stat].label) %></label></div>
+              <div class="field"><input type="text" value="<%- bridge.stat[stat].value %>" data-key="<%= stat %>" readonly></div>
+            </div>
+            <%_ }) -%>
+          </div>
+          <div class="column">
+            <div class="two fields">
+              <div class="field"><label><%= _('Archived logs') %></label></div>
+              <div class="field">
+                <select class="ui dropdown" data-log="<%= bridge.name %>" data-title="<%= _('Bridge <span class="ui info text">%NAME%</span> log %LOG%') %>">
+                  <option value=""><%= _('- Select log -') %></option>
+                  <%_ bridge.logs.forEach(log => { -%>
+                  <option value="<%= log.seq %>"><%= log.name %></option>
+                  <%_ }) -%>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
-        <%_ }) -%>
         <div class="field">
           <label><%= _('Logs') %></label>
           <textarea class="log <%= bridge.name %>" rows="20" readonly></textarea>
@@ -39,4 +56,5 @@ $('a[data-bridge]').on('click', function(e) {
     $(\`.ui.form.bridge\`).hide();
     $(\`.ui.form.bridge.\${a.data('bridge')}\`).show();
 }).filter(':first').click();
+$('.ui.dropdown').dropdown();
 `) -%>

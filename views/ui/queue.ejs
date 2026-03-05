@@ -9,11 +9,12 @@
       <th><%= _('Status') %></th>
       <th><%= _('Result') %></th>
       <th><%= _('Time') %></th>
+      <th><%= _('Action') %></th>
     </tr>
   </thead>
 </table>
 <%_ script.create('JQuery')
-  .useDependencies('SemanticUI/Loader')
+  .useDependencies(['SemanticUI/Loader', 'SemanticUI/Dialog/Confirm'])
   .add(`
 $.queue = $.loader($('div[data-tab="queue"] table'), {
     url: '${route('Ui', {name: 'queue', page: 'PAGE'})}',
@@ -30,6 +31,11 @@ $.queue = $.loader($('div[data-tab="queue"] table'), {
                 counter.addClass('hidden');
             }
         }
+        $('[data-status!="processing"] [data-op="delete"]').hide();
+        $('a.queue-clicker').on('click', function(e) {
+            e.preventDefault();
+            self.handle($(this));
+        });
         if (self.loading) {
             self.loading = false;
         }
@@ -37,13 +43,16 @@ $.queue = $.loader($('div[data-tab="queue"] table'), {
 });
 $.queue.toRow = function(data) {
     return $(\`
-      <tr><td>\${data.nr}</td>
+      <tr data-status="\${data.status}"><td>\${data.nr}</td>
         <td>\${$.toStr(data.id)}</td>
         <td>\${$.toStr(data.type)}</td>
         <td><div class="ui scrolling container queue-name">\${$.hidePayload($.toStr(data.name))}</div></td>
         <td>\${this.toStatus(data.status)}</td>
         <td><div class="ui scrolling container queue-result">\${$.hidePayload($.toStr(data.result))}</div></td>
         <td>\${$.toStr(data.time)}</td>
+        <td>
+          <a href="#" class="queue-clicker" data-op="delete" data-queue="\${data.id}" role="button"><i class="trash alternate outline red icon"></i></a>
+        </td>
       </tr>\`);
 }
 $.queue.toStatus = function(data) {
@@ -57,6 +66,28 @@ $.queue.toStatus = function(data) {
     }[data];
     return icon ? \`<div data-tooltip="\${data}" data-position="right center"><i class="\${icon} icon"></i></div>\` :
         $.toStr(data);
+}
+$.queue.handle = function(el) {
+    const self = this;
+    switch (el.data('op')) {
+        case 'delete':
+            $.ntdlg.confirm(
+                'queue-delete-confirm-dlg',
+                '${_('Confirm')}',
+                '${_('Are you sure want to remove queue <span class="ui error text">%QUEUE%</span>?')}'.replace(/%QUEUE%/g, el.data('queue')),
+                $.ntdlg.ICON_QUESTION,
+                function() {
+                    $.post('${route('Ui', {name: 'task', op: 'remove'})}', {queue: el.data('queue')})
+                        .done(function(json) {
+                            $.tasks.notify(json);
+                            if (json.success) {
+                                self.reload();
+                            }
+                        });
+                }
+            );
+            break;
+    }
 }
 $.queue.reload = function() {
     const self = this;
