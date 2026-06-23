@@ -115,6 +115,17 @@ class UiController extends Controller {
             result.pages = req.app.locals.pager(result.count, result.size, result.page);
             res.json(result);
         });
+        this.addRoute('capture', 'get', '/capture/:filename', async (req, res, next) => {
+            /** @type {import('..').SipdApi} */
+            const api = req.app.api;
+            const result = await api.getCapture(req.params.filename);
+            if (result.data) {
+                res.type('png');
+                res.send(result.data);
+            } else {
+                res.sendStatus(404);
+            }
+        });
         this.addRoute('task', 'post', '/task/:op', async (req, res, next) => {
             const result = {
                 success: false

@@ -40,7 +40,7 @@ $.error = $.loader($('div[data-tab="error"] table'), {
 $.error.toRow = function(data) {
     return $(\`
       <tr><td>\${data.nr}</td>
-        <td>\${this.toImg($.toStr(data.image), data.filename)}</td>
+        <td>\${this.toImg($.toStr(data.filename), data.filename)}</td>
         <td>\${this.toPayload(data.error, '${_('Error Message')}')}</td>
         <td>\${this.toPayload(data.data, '${_('Error Data')}')}</td>
         <td>
@@ -52,7 +52,7 @@ $.error.toImg = function(data, alt) {
     if (data) {
         return \`
           <a href="#" class="err-clicker" data-op="view" data-title="\${alt}" data-tooltip="\${alt}" data-position="right center">
-            <img class="ui medium rounded bordered image" src="\${data}" alt="\${alt}">
+            <img class="ui medium rounded bordered image" src="\${'${route('Ui', {name: 'capture', filename: 'FILENAME'})}'.replace(/FILENAME/, data)}" alt="\${alt}">
           </a>\`;
     }
 }

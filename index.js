@@ -35,7 +35,10 @@ const { Assets, CDN } = require('@ntlab/ntjs-assets');
 // register script repository
 require('@ntlab/ntjs-repo')();
 
-/* --- BEGIN API V1 --- */
+/* --- BEGIN API V2 --- */
+
+/* V1: 2026-03-05 */
+/* V2: 2026-06-23 */
 
 /**
  * SIPD Penatausahaan Bridge main application.
@@ -52,6 +55,7 @@ require('@ntlab/ntjs-repo')();
  * @property {ActivityFunction} getActivity Get activity logs
  * @property {ObjectFunction} getCount Get activity count
  * @property {PagedObjectsFunction} getErrors Get captured errors
+ * @property {CaptureFileFunction} getCapture Get captured PNG file
  * @property {QueryFunction} query Perform API query
  */
 
@@ -125,6 +129,14 @@ require('@ntlab/ntjs-repo')();
  *
  * @callback LogFilesFunction
  * @returns {Promise<[{name: string, seq: string, time: number}]>}
+ */
+
+/**
+ * Get captured PNG file.
+ *
+ * @callback CaptureFileFunction
+ * @param {string} filename Filename
+ * @returns {Promise<{data: Buffer}>}
  */
 
 /* --- END API --- */
