@@ -42,7 +42,7 @@ $.error.toRow = function(data) {
       <tr><td>\${data.nr}</td>
         <td>\${this.toImg($.toStr(data.filename), data.filename)}</td>
         <td>\${this.toPayload(data.error, '${_('Error Message')}')}</td>
-        <td>\${this.toPayload(data.data, '${_('Error Data')}')}</td>
+        <td>\${this.toPayload(null, '${_('Error Data')}', data.datafilename)}</td>
         <td>
           <a href="#" class="err-clicker" data-op="delete" data-filename="\${data.filename}" role="button"><i class="trash alternate outline red icon"></i></a>
         </td>
@@ -56,17 +56,18 @@ $.error.toImg = function(data, alt) {
           </a>\`;
     }
 }
-$.error.toPayload = function(data, title) {
-    if (data) {
-        if (typeof data === 'string' && data.startsWith('{')) {
-            try {
-                data = JSON.parse(data);
-            }
-            catch (err) {
-            }
+$.error.toPayload = function(data, title, filename) {
+    if (typeof data === 'string' && data.startsWith('{')) {
+        try {
+            data = JSON.parse(data);
         }
-        const payload = $.toStr(data);
-        let excerpt = payload;
+        catch (err) {
+        }
+    }
+    let excerpt, payload;
+    if (data) {
+        payload = $.toStr(data);
+        excerpt = payload;
         if (excerpt.length > 100) {
             excerpt = excerpt.substr(0, 100);
             if (excerpt.includes('\\n')) {
@@ -78,12 +79,16 @@ $.error.toPayload = function(data, title) {
             }
             excerpt += '&hellip;';
         }
-        return \`
-          <a href="#" class="err-clicker" data-op="view" data-title="\${title}">
-            <span>\${excerpt}</span>
-            <pre style="display: none;">\${payload}</pre>
-          </a>\`;
+    } else {
+        excerpt = '&hellip;';
+        payload = '';
     }
+    const url = filename ? '${route('Ui', {name: 'capture', filename: 'FILENAME'})}'.replace(/FILENAME/, filename) : '#';
+    return \`
+        <a href="\${url}" class="err-clicker" data-op="view" data-title="\${title}">
+        <span>\${excerpt}</span>
+        <pre style="display: none;">\${payload}</pre>
+        </a>\`;
 }
 $.error.handle = function(el) {
     const self = this;
@@ -96,7 +101,19 @@ $.error.handle = function(el) {
                 size = 'fullscreen';
             }
             if (pre.length) {
-                content = \`<div class="ui fluid scrolling container"><pre>\${$.safeStr(pre.text())}</pre></div>\`;
+                if (el.attr('href') !== '#') {
+                    content = \`
+                        <div class="ui placeholder">
+                          <div class="line"></div>
+                          <div class="line"></div>
+                          <div class="line"></div>
+                          <div class="line"></div>
+                          <div class="line"></div>
+                        </div>\`;
+                } else {
+                    content = \`<pre>\${$.safeStr(pre.text())}</pre>\`;
+                }
+                content = \`<div class="ui fluid scrolling container">\${content}</div>\`;
             }
             const dlg = $.ntdlg.create('err-view-dlg', el.data('title'), content, {
                 size,
@@ -104,6 +121,14 @@ $.error.handle = function(el) {
                     okay: {
                         type: 'green approve',
                         caption: '<i class="check icon"></i>${_('Ok')}',
+                    }
+                },
+                show() {
+                    if (el.attr('href') !== '#') {
+                        $.get(el.attr('href'))
+                            .done(function(data) {
+                                $('#err-view-dlg .container').html(typeof data === 'object' ? JSON.stringify(data, null, 2) : $.safeStr(data));
+                            });
                     }
                 }
             });

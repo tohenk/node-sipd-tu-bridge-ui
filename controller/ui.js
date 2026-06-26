@@ -120,7 +120,13 @@ class UiController extends Controller {
             const api = req.app.api;
             const result = await api.getCapture(req.params.filename);
             if (result.data) {
-                res.type('png');
+                const ext = req.params.filename.substr(req.params.filename.lastIndexOf('.') + 1).toLowerCase();
+                switch (ext) {
+                    case 'png':
+                    case 'json':
+                        res.type(ext);
+                        break;
+                }
                 res.send(result.data);
             } else {
                 res.sendStatus(404);

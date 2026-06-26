@@ -55,7 +55,7 @@ require('@ntlab/ntjs-repo')();
  * @property {ActivityFunction} getActivity Get activity logs
  * @property {ObjectFunction} getCount Get activity count
  * @property {PagedObjectsFunction} getErrors Get captured errors
- * @property {CaptureFileFunction} getCapture Get captured PNG file
+ * @property {CaptureFileFunction} getCapture Get captured error file
  * @property {QueryFunction} query Perform API query
  */
 
@@ -132,7 +132,7 @@ require('@ntlab/ntjs-repo')();
  */
 
 /**
- * Get captured PNG file.
+ * Get captured error file.
  *
  * @callback CaptureFileFunction
  * @param {string} filename Filename
