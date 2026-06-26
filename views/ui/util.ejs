@@ -72,7 +72,7 @@ $.hidePayload = function(message) {
     return message;
 }
 $.isPayload = function(data) {
-    return Array.isArray(data) || typeof data === 'object' && data.constructor.name === 'Object';
+    return Array.isArray(data) || $.isPlainObject(data);
 }
 $.safeStr = function(s) {
     if (s !== '') {
@@ -90,5 +90,18 @@ $.toStr = function(o) {
         return $.safeStr(o.toString());
     }
     return '';
+}
+$.fixBuffer = function(data) {
+    if ($.isPlainObject(data)) {
+        for (const key of Object.keys(data)) {
+            if (data[key]) {
+                if (data[key].type === 'Buffer' && Array.isArray(data[key].data)) {
+                    data[key] = data[key].data;
+                } else {
+                    $.fixBuffer(data[key]);
+                }
+            }
+        }
+    }
 }
 `) -%>
