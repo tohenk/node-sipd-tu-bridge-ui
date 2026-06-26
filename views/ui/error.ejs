@@ -127,7 +127,8 @@ $.error.handle = function(el) {
                     if (el.attr('href') !== '#') {
                         $.get(el.attr('href'))
                             .done(function(data) {
-                                $('#err-view-dlg .container').html(typeof data === 'object' ? JSON.stringify(data, null, 2) : $.safeStr(data));
+                                const content = typeof data === 'object' ? JSON.stringify(data, null, 2) : $.safeStr(data);
+                                $('#err-view-dlg .container').html(\`<pre>\${content}</pre>\`);
                             });
                     }
                 }
