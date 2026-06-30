@@ -16,7 +16,7 @@
 <%_ script.create('JQuery')
   .useDependencies(['SemanticUI/Loader', 'SemanticUI/Dialog/Confirm'])
   .add(`
-$.queue = $.loader($('div[data-tab="queue"] table'), {
+$.theQueue = $.loader($('div[data-tab="queue"] table'), {
     url: '${route('Ui', {name: 'queue', page: 'PAGE'})}',
     formatRow(item) {
         return this.toRow(item);
@@ -41,7 +41,7 @@ $.queue = $.loader($('div[data-tab="queue"] table'), {
         }
     }
 });
-$.queue.toRow = function(data) {
+$.theQueue.toRow = function(data) {
     return $(\`
       <tr data-status="\${data.status}"><td>\${data.nr}</td>
         <td>\${$.toStr(data.id)}</td>
@@ -55,7 +55,7 @@ $.queue.toRow = function(data) {
         </td>
       </tr>\`);
 }
-$.queue.toStatus = function(data) {
+$.theQueue.toStatus = function(data) {
     const icon = {
         new: 'pause circle outline',
         processing: 'loading spinner',
@@ -67,7 +67,7 @@ $.queue.toStatus = function(data) {
     return icon ? \`<div data-tooltip="\${data}" data-position="right center"><i class="\${icon} icon"></i></div>\` :
         $.toStr(data);
 }
-$.queue.handle = function(el) {
+$.theQueue.handle = function(el) {
     const self = this;
     switch (el.data('op')) {
         case 'delete':
@@ -89,7 +89,7 @@ $.queue.handle = function(el) {
             break;
     }
 }
-$.queue.reload = function() {
+$.theQueue.reload = function() {
     const self = this;
     if (!self.loading) {
         self.loading = true;
@@ -98,5 +98,5 @@ $.queue.reload = function() {
 }
 `)
   .addInitializer(`
-$.queue.load();
+$.theQueue.load();
 `) -%>
