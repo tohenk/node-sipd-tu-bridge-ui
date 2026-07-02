@@ -31,7 +31,11 @@ $.theQueue = $.loader($('div[data-tab="queue"] table'), {
                 counter.addClass('hidden');
             }
         }
-        $('[data-status!="processing"] [data-op="delete"]').hide();
+        $('[data-status]').each(function() {
+            if ($(this).data('status') !== 'processing') {
+                $(this).find('[data-op="delete"]').hide();
+            }
+        });
         $('a.queue-clicker').on('click', function(e) {
             e.preventDefault();
             self.handle($(this));
