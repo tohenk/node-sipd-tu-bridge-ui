@@ -37,7 +37,7 @@ $.addLog = function(el, message, eol = '\\n') {
         }
         const textNode = el[0].childNodes[0];
         if (!textNode.nodeValue || textNode.nodeValue.substr(-message.length) !== message) {
-            textNode.nodeValue = message;
+            textNode.nodeValue += message;
             el.scrollTop(el[0].scrollHeight - el.height());
             return true;
         }
