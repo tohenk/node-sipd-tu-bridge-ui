@@ -31,15 +31,13 @@ $.uiRefresh = function() {
 }
 $.addLog = function(el, message, eol = '\\n') {
     if (message) {
-        let lines = 0;
-        for (let msg of Array.isArray(message) ? message : message.split(eol)) {
-            msg += eol;
-            if (el.text().substr(-msg.length) !== msg) {
-                el.append(document.createTextNode(msg));
-                lines++;
-            }
+        message += eol;
+        if (el[0].childNodes.length === 0) {
+            el.append(document.createTextNode(''));
         }
-        if (lines) {
+        const textNode = el[0].childNodes[0];
+        if (!textNode.nodeValue || textNode.nodeValue.substr(-message.length) !== message) {
+            textNode.nodeValue = message;
             el.scrollTop(el[0].scrollHeight - el.height());
             return true;
         }
