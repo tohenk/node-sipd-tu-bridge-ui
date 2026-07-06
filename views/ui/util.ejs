@@ -31,13 +31,17 @@ $.uiRefresh = function() {
 }
 $.addLog = function(el, message, eol = '\\n') {
     if (message) {
-        message += eol;
+        message = message.trimEnd();
         if (el[0].childNodes.length === 0) {
             el.append(document.createTextNode(''));
         }
         const textNode = el[0].childNodes[0];
         if (!textNode.nodeValue || textNode.nodeValue.substr(-message.length) !== message) {
-            textNode.nodeValue += message;
+            if (textNode.nodeValue) {
+                textNode.nodeValue += eol + message;
+            } else {
+                textNode.nodeValue = message;
+            }
             el.scrollTop(el[0].scrollHeight - el.height());
             return true;
         }
