@@ -2,11 +2,10 @@
 <table class="ui selectable celled table">
   <thead>
     <tr>
-      <th><%= _('#') %></th>
-      <th><%= _('Screen') %></th>
+      <th class="collapsing"><%= _('#') %></th>
+      <th class="collapsing"><%= _('Screen') %></th>
       <th><%= _('Error') %></th>
-      <th><%= _('Data') %></th>
-      <th><%= _('Action') %></th>
+      <th class="collapsing"><%= _('Action') %></th>
     </tr>
   </thead>
 </table>
@@ -39,12 +38,13 @@ $.error = $.loader($('div[data-tab="error"] table'), {
 });
 $.error.toRow = function(data) {
     return $(\`
-      <tr><td>\${data.nr}</td>
-        <td>\${this.toImg($.toStr(data.filename), data.filename)}</td>
+      <tr><td class="collapsing">\${data.nr}</td>
+        <td class="collapsing">\${this.toImg($.toStr(data.imgfilename), data.imgfilename)}</td>
         <td>\${this.toPayload(data.error, '${_('Error Message')}')}</td>
-        <td>\${this.toPayload(null, '${_('Error Data')}', data.datafilename)}</td>
-        <td>
-          <a href="#" class="err-clicker" data-op="delete" data-filename="\${data.filename}" role="button"><i class="trash alternate outline red icon"></i></a>
+        <td class="collapsing">
+          <a href="#" class="err-clicker" data-op="view" data-filename="\${data.srcfilename}" data-title="${_('Page Source')}" data-tooltip="${_('View page source')}" role="button"><i class="eye outline green icon"></i></a>
+          <a href="#" class="err-clicker" data-op="view" data-filename="\${data.datafilename}" data-title="${_('Data Payload')}" data-tooltip="${_('View data payload')}" role="button"><i class="server icon"></i></a>
+          <a href="#" class="err-clicker" data-op="delete" data-filename="\${data.imgfilename}" data-tooltip="${_('Delete')}" role="button"><i class="trash alternate outline red icon"></i></a>
         </td>
       </tr>\`);
 }
@@ -94,25 +94,34 @@ $.error.handle = function(el) {
     const self = this;
     switch (el.data('op')) {
         case 'view':
-            let content, size = 'large';
-            const img = el.find('img'), pre = el.find('pre');
+            let url, content, scrollable = true, size = 'large';
+            const img = el.find('img'), pre = el.find('pre'), filename = el.data('filename');
             if (img.length) {
                 content = \`<img class="ui fluid image v-max" src="\${img.attr('src')}">\`;
                 size = 'fullscreen';
+                scrollable = false;
             }
             if (pre.length) {
                 if (el.attr('href') !== '#') {
-                    content = \`
-                        <div class="ui placeholder">
-                          <div class="line"></div>
-                          <div class="line"></div>
-                          <div class="line"></div>
-                          <div class="line"></div>
-                          <div class="line"></div>
-                        </div>\`;
+                    url = el.attr('href');
                 } else {
                     content = \`<pre>\${$.safeStr(pre.text())}</pre>\`;
                 }
+            }
+            if (filename && !url) {
+                url = '${route('Ui', {name: 'capture', filename: 'FILENAME'})}'.replace(/FILENAME/, filename);
+            }
+            if (url) {
+                content = \`
+                    <div class="ui placeholder">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>\`;
+            }
+            if (scrollable) {
                 content = \`<div class="ui fluid scrolling container">\${content}</div>\`;
             }
             const dlg = $.ntdlg.create('err-view-dlg', el.data('title'), content, {
@@ -124,8 +133,8 @@ $.error.handle = function(el) {
                     }
                 },
                 show() {
-                    if (el.attr('href') !== '#') {
-                        $.get(el.attr('href'))
+                    if (url) {
+                        $.get(url)
                             .done(function(data) {
                                 $.fixBuffer(data);
                                 const content = typeof data === 'object' ? JSON.stringify(data, null, 2) : $.safeStr(data);

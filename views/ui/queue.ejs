@@ -2,14 +2,14 @@
 <table class="ui selectable celled table">
   <thead>
     <tr>
-      <th><%= _('#') %></th>
+      <th class="collapsing"><%= _('#') %></th>
       <th><%= _('Id') %></th>
       <th><%= _('Type') %></th>
       <th><%= _('Name') %></th>
       <th><%= _('Status') %></th>
       <th><%= _('Result') %></th>
       <th><%= _('Time') %></th>
-      <th><%= _('Action') %></th>
+      <th class="collapsing"><%= _('Action') %></th>
     </tr>
   </thead>
 </table>
@@ -47,15 +47,15 @@ $.theQueue = $.loader($('div[data-tab="queue"] table'), {
 });
 $.theQueue.toRow = function(data) {
     return $(\`
-      <tr data-status="\${data.status}"><td>\${data.nr}</td>
+      <tr data-status="\${data.status}"><td class="collapsing">\${data.nr}</td>
         <td>\${$.toStr(data.id)}</td>
         <td>\${$.toStr(data.type)}</td>
         <td><div class="ui scrolling container queue-name">\${$.hidePayload($.toStr(data.name))}</div></td>
         <td>\${this.toStatus(data.status)}</td>
         <td><div class="ui scrolling container queue-result">\${$.hidePayload($.toStr(data.result))}</div></td>
         <td>\${$.toStr(data.time)}</td>
-        <td>
-          <a href="#" class="queue-clicker" data-op="delete" data-queue="\${data.id}" role="button"><i class="trash alternate outline red icon"></i></a>
+        <td class="collapsing">
+          <a href="#" class="queue-clicker" data-op="delete" data-queue="\${data.id}" data-tooltip="${_('Delete')}" role="button"><i class="trash alternate outline red icon"></i></a>
         </td>
       </tr>\`);
 }
