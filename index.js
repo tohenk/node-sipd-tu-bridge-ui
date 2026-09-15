@@ -31,6 +31,7 @@ const FileStore = require('session-file-store')(session);
 const { Helper, Security, Factory } = require('@ntlab/express-middleware');
 const { ScriptManager, ScriptAsset } = require('@ntlab/ntjs');
 const { Assets, CDN } = require('@ntlab/ntjs-assets');
+const Translator = require('@ntlab/ntlib/translator');
 
 // register script repository
 require('@ntlab/ntjs-repo')();
@@ -257,7 +258,7 @@ class ExpressApp {
         }
         ScriptManager.require('JQuery/FormPost')
             .setOption('redir-delay', 1000);
-        ScriptManager.translator = require('@ntlab/express-controller/translator')._;
+        ScriptManager.translator = Translator._.bind(Translator);
         ScriptManager.config = options;
     }
 }
