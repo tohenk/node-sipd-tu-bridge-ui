@@ -1,6 +1,6 @@
 {
   "name": "@ntlab/sipd-tu-bridge-ui",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "SIPD Penatausahaan Bridge Web Interface",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tohenk/node-sipd-tu-bridge-ui.git"
+    "url": "git+https://github.com/tohenk/node-sipd-tu-bridge-ui.git"
   },
   "keywords": [
     "sipd",
@@ -31,12 +31,12 @@
   },
   "homepage": "https://github.com/tohenk/node-sipd-tu-bridge-ui#readme",
   "dependencies": {
-    "@ntlab/express-controller": "^1.3.0",
-    "@ntlab/express-middleware": "^2.6.0",
+    "@ntlab/express-controller": "^1.4.0",
+    "@ntlab/express-middleware": "^2.7.0",
     "@ntlab/ntjs": "^3.1.0",
-    "@ntlab/ntjs-assets": "^3.54.0",
-    "@ntlab/ntjs-repo": "^3.1.0",
-    "@ntlab/ntlib": "^2.10.0",
+    "@ntlab/ntjs-assets": "^3.57.0",
+    "@ntlab/ntjs-repo": "^3.2.1",
+    "@ntlab/ntlib": "^3.0.0",
     "ejs": "^3.1.10",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
