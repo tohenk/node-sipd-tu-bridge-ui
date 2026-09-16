@@ -19,7 +19,15 @@
     <div class="ui fluid card">
       <div class="content">
         <div class="ui red right floated tiny label"><%= bridge.year %></div>
-        <div class="item header"><i class="ui laptop code icon"></i><%= bridge.name.toUpperCase() %></div>
+        <div class="item header">
+          <i class="ui laptop code icon"></i><%= bridge.name.toUpperCase() %>
+          <%_ if (bridge.accepts) { -%>
+          <%_ accepts = Array.isArray(bridge.accepts) ? bridge.accepts : [bridge.accepts] -%>
+          <%_ accepts.forEach(accept => { -%>
+          <span class="ui blue circular tiny label"><%= accept.toUpperCase() %></span>
+          <%_ }) -%>
+          <%_ } -%>
+        </div>
       </div>
       <div class="extra content" data-bridge="<%= bridge.name %>">
         <div class="ui divided items">
